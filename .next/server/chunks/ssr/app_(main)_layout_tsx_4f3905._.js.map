@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///Users/hasuwini/Documents/Frontend/MONGO-REDDIT/ed-frontend/app/%28main%29/layout.tsx"],"sourcesContent":["import { Header } from 'components/header'\n\nexport default function MainLayout({\n  children,\n}: Readonly<{\n  children: React.ReactNode\n}>) {\n  return (\n    <>\n      <Header />\n      {children}\n    </>\n  )\n}\n"],"names":[],"mappings":";;;;AAAA;;;AAEe,SAAS,WAAW,EACjC,QAAQ,EAGR;IACA,qBACE;;0BACE,8OAAC,qHAAA,CAAA,SAAM;;;;;YACN;;;AAGP"}},
+    {"offset": {"line": 26, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}}]
+}

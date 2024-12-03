@@ -1,0 +1,16 @@
+{
+  "node": {
+    "7f5d5ba158e0892350a3aac14eeb40d916263bc3ef": {
+      "workers": {
+        "app/auth/log-in/page": {
+          "moduleId": "[project]/.next-internal/server/app/auth/log-in/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/log-in.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/auth/log-in/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}
