@@ -1,0 +1,13 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///Users/hasuwini/Documents/Frontend/MONGO-REDDIT/ed-frontend/app/posts/page.tsx/proxy.js"],"sourcesContent":["import { registerClientReference } from \"react-server-dom-turbopack/server.edge\";\nexport default registerClientReference(\n    function() { throw new Error(\"Attempted to call the default export of [project]/app/posts/page.tsx <module evaluation> from the server, but it's on the client. It's not possible to invoke a client function from the server, it can only be rendered as a Component or passed to props of a Client Component.\"); },\n    \"[project]/app/posts/page.tsx <module evaluation>\",\n    \"default\",\n);\n"],"names":[],"mappings":";;;AAAA;;uCACe,CAAA,GAAA,qPAAA,CAAA,0BAAuB,AAAD,EACjC;IAAa,MAAM,IAAI,MAAM;AAAsR,GACnT,oDACA"}},
+    {"offset": {"line": 15, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}},
+    {"offset": {"line": 21, "column": 0}, "map": {"version":3,"sources":["file:///Users/hasuwini/Documents/Frontend/MONGO-REDDIT/ed-frontend/app/posts/page.tsx/proxy.js"],"sourcesContent":["import { registerClientReference } from \"react-server-dom-turbopack/server.edge\";\nexport default registerClientReference(\n    function() { throw new Error(\"Attempted to call the default export of [project]/app/posts/page.tsx from the server, but it's on the client. It's not possible to invoke a client function from the server, it can only be rendered as a Component or passed to props of a Client Component.\"); },\n    \"[project]/app/posts/page.tsx\",\n    \"default\",\n);\n"],"names":[],"mappings":";;;AAAA;;uCACe,CAAA,GAAA,qPAAA,CAAA,0BAAuB,AAAD,EACjC;IAAa,MAAM,IAAI,MAAM;AAAkQ,GAC/R,gCACA"}},
+    {"offset": {"line": 29, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}},
+    {"offset": {"line": 35, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":""}},
+    {"offset": {"line": 39, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}},
+    {"offset": {"line": 139, "column": 0}, "map": {"version":3,"sources":["file:///Users/hasuwini/Documents/Frontend/MONGO-REDDIT/ed-frontend/lib/client.ts"],"sourcesContent":["import axios from 'axios'\n\nexport const client = axios.create({\n  baseURL: process.env.NEXT_PUBLIC_BASE_URL,\n  withCredentials: true,\n  headers: { 'Content-Type': 'application/json' },\n})\n"],"names":[],"mappings":";;;AAAA;;AAEO,MAAM,SAAS,qIAAA,CAAA,UAAK,CAAC,MAAM,CAAC;IACjC,OAAO;IACP,iBAAiB;IACjB,SAAS;QAAE,gBAAgB;IAAmB;AAChD"}},
+    {"offset": {"line": 151, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}}]
+}

@@ -1,4 +1,5 @@
 import { Header } from 'components/header'
+import { Providers } from './providers'
 
 export default function MainLayout({
   children,
@@ -8,7 +9,7 @@ export default function MainLayout({
   return (
     <>
       <Header />
-      {children}
+      <Providers>{children}</Providers>
     </>
   )
 }

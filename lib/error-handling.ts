@@ -2,14 +2,20 @@ import { isAxiosError } from 'axios'
 import { isRedirectError } from 'next/dist/client/components/redirect'
 import { toast } from 'sonner'
 
-export type ServerActionResponse = { error: string } | undefined | void
+// lib/error-handling.ts
 
-export const handleServerActionError = (response: ServerActionResponse) => {
-  if (response?.error) {
-    throw Error(response.error)
+export type ServerActionResponse<T = any> =
+  | { data: T; error?: never } // Success case
+  | { data?: never; error: string } // Error case
+
+export const handleServerActionError = <T>(
+  response: ServerActionResponse<T>,
+): T => {
+  if ('error' in response) {
+    throw new Error(response.error)
   }
+  return response.data
 }
-
 export const handleAxiosError = (error: unknown): ServerActionResponse => {
   const defaultErrorMessage = 'something went wrong'
 
