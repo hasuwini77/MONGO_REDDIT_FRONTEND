@@ -1,4 +1,3 @@
-// actions/log-in.ts
 'use server'
 
 import { client } from 'lib/client'

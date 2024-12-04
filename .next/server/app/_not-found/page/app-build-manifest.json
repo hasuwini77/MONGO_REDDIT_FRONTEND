@@ -1,8 +1,10 @@
 {
   "pages": {
     "/_not-found/page": [
+      "static/chunks/_2b2515._.js",
+      "static/chunks/app_favicon_ico_mjs_5930e7._.js",
       "static/chunks/[root of the server]__d65c6a._.css",
-      "static/chunks/node_modules_dd1f90._.js",
+      "static/chunks/node_modules_ce0e6f._.js",
       "static/chunks/_6adbe9._.js",
       "static/chunks/app_layout_tsx_36ac26._.js",
       "static/chunks/node_modules_next_dist_compiled_react-dom_1f56dc._.js",

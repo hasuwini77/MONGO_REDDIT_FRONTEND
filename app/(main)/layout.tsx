@@ -1,6 +1,5 @@
 import { Header } from 'components/header'
 import { Providers } from './providers'
-import { AuthProvider } from 'context/AuthContext'
 
 export default function MainLayout({
   children,
@@ -10,10 +9,8 @@ export default function MainLayout({
   return (
     <>
       <Providers>
-        <AuthProvider>
-          <Header />
-          {children}
-        </AuthProvider>
+        <Header />
+        {children}
       </Providers>
     </>
   )

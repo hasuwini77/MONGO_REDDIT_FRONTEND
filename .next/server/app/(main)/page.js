@@ -7,7 +7,7 @@ runtime.loadChunk("server/chunks/ssr/node_modules_fec543._.js");
 runtime.loadChunk("server/chunks/ssr/[root of the server]__c2d15b._.js");
 runtime.loadChunk("server/chunks/ssr/[root of the server]__d65c6a._.css");
 runtime.loadChunk("server/chunks/ssr/node_modules_16929d._.js");
-runtime.loadChunk("server/chunks/ssr/_33bded._.js");
+runtime.loadChunk("server/chunks/ssr/_0c796b._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_4a2fd0._.js");
 runtime.loadChunk("server/chunks/ssr/[root of the server]__93a536._.js");
 runtime.getOrInstantiateRuntimeModule("[project]/.next-internal/server/app/(main)/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/get-posts.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH);

@@ -2,32 +2,39 @@
 
 import { client } from 'lib/client'
 import { ServerActionResponse } from 'lib/error-handling'
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidateTag, revalidatePath } from 'next/cache'
 
-interface CreatePostValues {
+interface Post {
+  _id: string
   title: string
   content: string
+  author: {
+    username: string
+  }
+  createdAt: string
 }
 
 export const createPost = async (
-  data: CreatePostValues,
-): Promise<ServerActionResponse> => {
+  data: { title: string; content: string },
+  token: string,
+): Promise<ServerActionResponse<Post>> => {
   try {
-    console.log('Server Action: Creating new post')
-    const response = await client.post('/posts', data)
+    if (!token) {
+      throw new Error('Authentication required')
+    }
 
-    // Revalidate after successful post creation
+    // Add authorization header to the request
+    const response = await client.post<Post>('/posts', data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
     revalidateTag('posts')
-    revalidatePath('/') // Revalidate the home page
-    revalidatePath(`/posts/${response.data._id}`) // Revalidate the new post's page
+    revalidatePath('/')
 
-    console.log('Server Action: Post created:', response.data)
     return { data: response.data }
   } catch (error: any) {
-    console.error(
-      'Server Action: Error:',
-      error.response?.data || error.message,
-    )
     return {
       error:
         error.response?.data?.message ||

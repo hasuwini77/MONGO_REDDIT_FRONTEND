@@ -1,0 +1,16 @@
+{
+  "node": {
+    "7f743ac26f77957948e2dbacd30abd37a410557448": {
+      "workers": {
+        "app/create-post/page": {
+          "moduleId": "[project]/.next-internal/server/app/create-post/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/create-post.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/create-post/page": "action-browser"
+      }
+    }
+  },
+  "edge": {}
+}

@@ -1,4 +1,3 @@
-// hooks/useAuthentication.ts
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -10,6 +9,9 @@ interface User {
   username: string
 }
 
+// Helper function to add delay
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
 export function useAuthentication() {
   const [user, setUser] = useState<User | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -20,11 +22,13 @@ export function useAuthentication() {
     try {
       const token = localStorage.getItem('token')
       if (!token) {
+        await delay(1000)
         setIsLoading(false)
         return
       }
 
       client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      await delay(1000) // Add 1 second delay
       const response = await client.get('/auth/me')
 
       if (response.data) {
