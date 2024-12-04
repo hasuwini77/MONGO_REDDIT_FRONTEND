@@ -5,22 +5,7 @@ import { getPosts } from 'actions/get-posts'
 import { handleServerActionError } from 'lib/error-handling'
 import Link from 'next/link'
 import { useEffect } from 'react'
-
-interface Post {
-  _id: string
-  title: string
-  content: string
-  author: {
-    username: string
-  }
-  comments: Array<{
-    content: string
-    author: {
-      username: string
-    }
-  }>
-  createdAt: string
-}
+import { Post } from 'types/types'
 
 const MyPosts = () => {
   const {
@@ -30,13 +15,11 @@ const MyPosts = () => {
     error,
   } = useMutation({
     mutationFn: async () => {
-      console.log('Fetching all posts') // Debug log
       const result = await getPosts()
-      console.log('Server response:', result) // Debug log
       return handleServerActionError(result) as Post[]
     },
     onError: (error) => {
-      console.error('Error fetching posts:', error) // Error log
+      console.error('Error fetching posts:', error)
     },
     onSuccess: (data) => {
       console.log('Successfully fetched posts:', data) // Success log

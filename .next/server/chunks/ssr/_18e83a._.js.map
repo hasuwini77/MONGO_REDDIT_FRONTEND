@@ -2,7 +2,7 @@
   "version": 3,
   "sources": [],
   "sections": [
-    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///Users/hasuwini/Documents/Frontend/MONGO-REDDIT/ed-frontend/app/%28main%29/page.tsx"],"sourcesContent":["import { MyPosts } from 'app/posts/page'\n\nexport default function Home() {\n  return (\n    <div className='main'>\n      <h1> Home Page</h1>\n      <div>\n        <MyPosts />\n      </div>\n    </div>\n  )\n}\n"],"names":[],"mappings":";;;;AAAA;;;AAEe,SAAS;IACtB,qBACE,8OAAC;QAAI,WAAU;;0BACb,8OAAC;0BAAG;;;;;;0BACJ,8OAAC;0BACC,cAAA,8OAAC,qHAAA,CAAA,UAAO;;;;;;;;;;;;;;;;AAIhB"}},
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///Users/hasuwini/Documents/Frontend/MONGO-REDDIT/ed-frontend/app/%28main%29/page.tsx"],"sourcesContent":["import MyPosts from 'app/(main)/posts/page'\n\nexport default function Home() {\n  return (\n    <div className='main'>\n      <h1> Home Page</h1>\n      <div>\n        <MyPosts />\n      </div>\n    </div>\n  )\n}\n"],"names":[],"mappings":";;;;AAAA;;;AAEe,SAAS;IACtB,qBACE,8OAAC;QAAI,WAAU;;0BACb,8OAAC;0BAAG;;;;;;0BACJ,8OAAC;0BACC,cAAA,8OAAC,iIAAA,CAAA,UAAO;;;;;;;;;;;;;;;;AAIhB"}},
     {"offset": {"line": 43, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}},
     {"offset": {"line": 54, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":""}},
     {"offset": {"line": 54, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}},

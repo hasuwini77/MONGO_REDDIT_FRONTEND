@@ -17,9 +17,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$ind
 ;
 ;
 const handleServerActionError = (response)=>{
-    if (response?.error) {
-        throw Error(response.error);
+    if ('error' in response) {
+        throw new Error(response.error);
     }
+    return response.data;
 };
 const handleAxiosError = (error)=>{
     const defaultErrorMessage = 'something went wrong';

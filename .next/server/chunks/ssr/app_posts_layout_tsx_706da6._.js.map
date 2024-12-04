@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///Users/hasuwini/Documents/Frontend/MONGO-REDDIT/ed-frontend/app/posts/layout.tsx"],"sourcesContent":["import { Header } from 'components/header'\nimport { Providers } from 'app/(main)/providers'\n\nexport default function PostsLayout({\n  children,\n}: Readonly<{\n  children: React.ReactNode\n}>) {\n  return (\n    <>\n      <Header />\n      <Providers>{children}</Providers>\n    </>\n  )\n}\n"],"names":[],"mappings":";;;;AAAA;AACA;;;;AAEe,SAAS,YAAY,EAClC,QAAQ,EAGR;IACA,qBACE;;0BACE,8OAAC,qHAAA,CAAA,SAAM;;;;;0BACP,8OAAC,6HAAA,CAAA,YAAS;0BAAE;;;;;;;;AAGlB"}},
+    {"offset": {"line": 34, "column": 0}, "map": {"version":3,"sources":[],"names":[],"mappings":"A"}}]
+}

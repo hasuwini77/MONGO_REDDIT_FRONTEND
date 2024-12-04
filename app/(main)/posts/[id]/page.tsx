@@ -26,7 +26,6 @@ const PostPage = () => {
   const params = useParams()
   const postId = params.id as string
 
-  // Add validation for postId
   if (!postId) {
     return <div>Invalid post ID</div>
   }

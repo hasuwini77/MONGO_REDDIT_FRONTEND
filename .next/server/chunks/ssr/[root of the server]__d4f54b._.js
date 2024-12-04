@@ -233,10 +233,21 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib
 ;
 const client = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"].create({
     baseURL: ("TURBOPACK compile-time value", "http://localhost:8082"),
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json'
     }
-});
+}) // client.interceptors.response.use(
+ //   (response) => {
+ //     console.log('API Response:', response)
+ //     return response
+ //   },
+ //   (error) => {
+ //     console.error('API Error:', error)
+ //     return Promise.reject(error)
+ //   },
+ // )
+;
 }}),
 "[project]/lib/error-handling.ts [app-rsc] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
@@ -255,9 +266,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$ind
 ;
 ;
 const handleServerActionError = (response)=>{
-    if (response?.error) {
-        throw Error(response.error);
+    if ('error' in response) {
+        throw new Error(response.error);
     }
+    return response.data;
 };
 const handleAxiosError = (error)=>{
     const defaultErrorMessage = 'something went wrong';
