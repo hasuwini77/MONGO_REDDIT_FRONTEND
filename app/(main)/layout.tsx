@@ -9,9 +9,11 @@ export default function MainLayout({
 }>) {
   return (
     <>
-      <Header />
       <Providers>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <Header />
+          {children}
+        </AuthProvider>
       </Providers>
     </>
   )

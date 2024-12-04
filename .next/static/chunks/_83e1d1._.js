@@ -5,6 +5,7 @@
 
 var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, k: __turbopack_refresh__, m: module, z: require } = __turbopack_context__;
 {
+// lib/error-handling.ts
 __turbopack_esm__({
     "handleAxiosError": (()=>handleAxiosError),
     "handleServerActionError": (()=>handleServerActionError),
@@ -19,6 +20,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$ind
 const handleServerActionError = (response)=>{
     if ('error' in response) {
         throw new Error(response.error);
+    }
+    if ('token' in response) {
+        return response.token;
     }
     return response.data;
 };
@@ -120,6 +124,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$error$2d$handling$2e$
 var __TURBOPACK__imported__module__$5b$project$5d2f$actions$2f$sign$2d$up$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/actions/sign-up.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$schemas$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/lib/schemas.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$field$2d$error$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/components/field-error.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$useAuthentification$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/hooks/useAuthentification.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@tanstack/react-query/build/modern/useMutation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hook$2d$form$2f$dist$2f$index$2e$esm$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/react-hook-form/dist/index.esm.mjs [app-client] (ecmascript)");
 ;
@@ -132,12 +138,28 @@ var _s = __turbopack_refresh__.signature();
 ;
 ;
 ;
+;
+;
 const SignUpForm = ()=>{
     _s();
+    const { login } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$useAuthentification$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuthentication"])();
+    const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const { mutate, isPending } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: {
             "SignUpForm.useMutation": async (values)=>{
-                (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$error$2d$handling$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["handleServerActionError"])(await (0, __TURBOPACK__imported__module__$5b$project$5d2f$actions$2f$sign$2d$up$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["signUp"])(values));
+                const response = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$actions$2f$sign$2d$up$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["signUp"])(values);
+                if ('error' in response) {
+                    throw new Error(response.error);
+                }
+                return response;
+            }
+        }["SignUpForm.useMutation"],
+        onSuccess: {
+            "SignUpForm.useMutation": async (data)=>{
+                if (data.token) {
+                    await login(data.token);
+                    router.push('/');
+                }
             }
         }["SignUpForm.useMutation"],
         onError: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$error$2d$handling$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["toastServerError"]
@@ -156,14 +178,14 @@ const SignUpForm = ()=>{
                 className: "input"
             }, void 0, false, {
                 fileName: "[project]/app/auth/sign-up/form.tsx",
-                lineNumber: 32,
+                lineNumber: 47,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$field$2d$error$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FieldError"], {
                 error: errors.username
             }, void 0, false, {
                 fileName: "[project]/app/auth/sign-up/form.tsx",
-                lineNumber: 38,
+                lineNumber: 53,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -173,14 +195,14 @@ const SignUpForm = ()=>{
                 className: "input"
             }, void 0, false, {
                 fileName: "[project]/app/auth/sign-up/form.tsx",
-                lineNumber: 39,
+                lineNumber: 54,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$field$2d$error$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FieldError"], {
                 error: errors.password
             }, void 0, false, {
                 fileName: "[project]/app/auth/sign-up/form.tsx",
-                lineNumber: 45,
+                lineNumber: 60,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -190,18 +212,20 @@ const SignUpForm = ()=>{
                 children: isPending ? 'signing up...' : 'sign up'
             }, void 0, false, {
                 fileName: "[project]/app/auth/sign-up/form.tsx",
-                lineNumber: 46,
+                lineNumber: 61,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/auth/sign-up/form.tsx",
-        lineNumber: 28,
+        lineNumber: 43,
         columnNumber: 5
     }, this);
 };
-_s(SignUpForm, "raSzp7ZDryBsucLp9yZIYIJgY7M=", false, function() {
+_s(SignUpForm, "jYkVLrZuqG30kp7LgzHWEKtuIeI=", false, function() {
     return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$hooks$2f$useAuthentification$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAuthentication"],
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useMutation"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hook$2d$form$2f$dist$2f$index$2e$esm$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useForm"]
     ];

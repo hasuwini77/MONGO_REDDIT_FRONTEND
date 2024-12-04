@@ -1,30 +1,27 @@
+// actions/log-in.ts
 'use server'
 
-import { auth } from 'lib/auth'
 import { client } from 'lib/client'
 import { handleAxiosError, ServerActionResponse } from 'lib/error-handling'
 import { logInSchema, LogInValues } from 'lib/schemas'
-import { redirect } from 'next/navigation'
 
 export const logIn = async (
   data: LogInValues,
 ): Promise<ServerActionResponse> => {
-  const parsedData = logInSchema.parse(data)
-
   try {
+    const parsedData = logInSchema.parse(data)
     const response = await client.post('/auth/log-in', parsedData)
 
-    if (
-      !response.data.accessToken ||
-      typeof response.data.accessToken !== 'string'
-    ) {
-      return { error: 'access token missing' }
+    // Check if we have both token and user in the response
+    if (!response.data.token || !response.data.user) {
+      return { error: 'Invalid response from server' }
     }
 
-    await auth.setAccessToken(response.data.accessToken)
+    return {
+      token: response.data.token,
+      user: response.data.user,
+    }
   } catch (error) {
     return handleAxiosError(error)
   }
-
-  redirect('/')
 }

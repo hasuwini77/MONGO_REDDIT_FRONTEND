@@ -3,15 +3,30 @@
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { handleServerActionError, toastServerError } from 'lib/error-handling'
+import { toastServerError, ServerActionResponse } from 'lib/error-handling'
 import { signUp } from 'actions/sign-up'
 import { signUpSchema, SignUpValues } from 'lib/schemas'
 import { FieldError } from 'components/field-error'
+import { useAuthentication } from 'hooks/useAuthentification'
+import { useRouter } from 'next/navigation'
 
 export const SignUpForm = () => {
+  const { login } = useAuthentication()
+  const router = useRouter()
+
   const { mutate, isPending } = useMutation({
     mutationFn: async (values: SignUpValues) => {
-      handleServerActionError(await signUp(values))
+      const response = await signUp(values)
+      if ('error' in response) {
+        throw new Error(response.error)
+      }
+      return response as Extract<ServerActionResponse, { token: string }>
+    },
+    onSuccess: async (data) => {
+      if ('token' in data) {
+        await login(data.token)
+        router.push('/')
+      }
     },
     onError: toastServerError,
   })

@@ -1,20 +1,37 @@
+// components/login-form.tsx
 'use client'
 
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-
-import { handleServerActionError, toastServerError } from 'lib/error-handling'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { logIn } from 'actions/log-in'
 import { logInSchema, LogInValues } from 'lib/schemas'
 import { FieldError } from 'components/field-error'
+import { useAuthentication } from 'hooks/useAuthentification'
 
 export const LogInForm = () => {
+  const { login } = useAuthentication()
+  const router = useRouter()
+
   const { mutate, isPending } = useMutation({
     mutationFn: async (values: LogInValues) => {
-      handleServerActionError(await logIn(values))
+      const response = await logIn(values)
+
+      if ('error' in response) {
+        throw new Error(response.error)
+      }
+
+      if ('token' in response) {
+        await login(response.token)
+        toast.success('Logged in successfully')
+        router.push('/')
+      }
     },
-    onError: toastServerError,
+    onError: (error: Error) => {
+      toast.error(error.message)
+    },
   })
 
   const {
