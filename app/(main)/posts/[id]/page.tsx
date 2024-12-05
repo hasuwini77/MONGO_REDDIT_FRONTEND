@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { deleteComment } from 'actions/delete-comment'
 import { deletePost } from 'actions/delete-post'
 import { getPost } from 'actions/get-post'
-import { updatePost } from 'actions/update-post' // Added missing import
+import { updatePost } from 'actions/update-post'
 import { CommentForm } from 'components/CommentForm'
 import { useAuthentication } from 'hooks/useAuthentification'
 import { handleServerActionError } from 'lib/error-handling'
@@ -42,6 +42,7 @@ const PostPage = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [editedTitle, setEditedTitle] = useState('')
   const [editedContent, setEditedContent] = useState('')
+  const [loading, setLoading] = useState(true)
 
   if (!postId) {
     return <div>Invalid post ID</div>
@@ -50,7 +51,6 @@ const PostPage = () => {
   const {
     mutate,
     data: post,
-    isPending,
     error,
   } = useMutation({
     mutationFn: async () => {
@@ -64,16 +64,17 @@ const PostPage = () => {
     },
     onSuccess: (data) => {
       console.log('Successfully fetched post:', data)
+      setEditedTitle(data.title)
+      setEditedContent(data.content)
+      setLoading(false) // Hide loader once data is loaded
     },
   })
 
-  // Delete post mutation
-  const { mutate: handleDelete, isPending: isDeleting } = useMutation({
+  const { mutate: handleDelete } = useMutation({
     mutationFn: async () => {
       const token = localStorage.getItem('token')
       if (!token) throw new Error('Not authenticated')
 
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // Optional delay
       return deletePost(postId, token)
     },
     onSuccess: () => {
@@ -84,8 +85,7 @@ const PostPage = () => {
     },
   })
 
-  // Add update post mutation
-  const { mutate: handleUpdate, isPending: isUpdating } = useMutation({
+  const { mutate: handleUpdate } = useMutation({
     mutationFn: async () => {
       const token = localStorage.getItem('token')
       if (!token) throw new Error('Not authenticated')
@@ -105,32 +105,21 @@ const PostPage = () => {
     },
   })
 
-  // Delete Comment mutation
+  const { mutate: handleDeleteComment } = useMutation({
+    mutationFn: async (commentId: string) => {
+      const token = localStorage.getItem('token')
+      if (!token) throw new Error('Not authenticated')
 
-  const { mutate: handleDeleteComment, isPending: isDeletingComment } =
-    useMutation({
-      mutationFn: async (commentId: string) => {
-        const token = localStorage.getItem('token')
-        if (!token) throw new Error('Not authenticated')
-
-        return deleteComment(postId, commentId, token)
-      },
-      onSuccess: () => {
-        mutate() // Refetch the post to get updated comments
-        toast.success('Comment deleted successfully')
-      },
-      onError: (error: Error) => {
-        toast.error(error.message)
-      },
-    })
-
-  // Initialize edit form when post data is available
-  useEffect(() => {
-    if (post) {
-      setEditedTitle(post.title)
-      setEditedContent(post.content)
-    }
-  }, [post])
+      return deleteComment(postId, commentId, token)
+    },
+    onSuccess: () => {
+      mutate()
+      toast.success('Comment deleted successfully')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
+    },
+  })
 
   useEffect(() => {
     if (postId) {
@@ -138,10 +127,11 @@ const PostPage = () => {
     }
   }, [mutate, postId])
 
-  if (isPending) {
+  if (loading || !user) {
+    // Show loader until data and user authentication are ready
     return (
-      <div className='flex items-center justify-center p-4'>
-        <HashLoader size={30} color='#3B82F6' />
+      <div className='flex h-screen items-center justify-center'>
+        <HashLoader size={50} color='#3B82F6' />
       </div>
     )
   }
@@ -198,22 +188,13 @@ const PostPage = () => {
                     }
                   })
                 }}
-                disabled={isUpdating}
                 className='rounded bg-blue-500 px-4 py-2 text-white'
               >
-                {isUpdating ? (
-                  <div className='flex items-center gap-2'>
-                    <HashLoader size={20} color='#ffffff' />
-                    <span>Updating...</span>
-                  </div>
-                ) : (
-                  'Save Changes'
-                )}
+                Save Changes
               </button>
               <button
                 onClick={() => setIsEditing(false)}
                 className='rounded bg-gray-500 px-4 py-2 text-white'
-                disabled={isUpdating}
               >
                 Cancel
               </button>
@@ -227,7 +208,6 @@ const PostPage = () => {
             </div>
             <div className='prose mt-6'>{post.content}</div>
 
-            {/* Action buttons - only shown if user is the author */}
             {user?.id === post.author._id && (
               <div className='space-x-2 py-2'>
                 <button
@@ -258,23 +238,14 @@ const PostPage = () => {
                     })
                   }}
                   className='button-danger rounded-md'
-                  disabled={isDeleting}
                 >
-                  {isDeleting ? (
-                    <div className='flex items-center gap-2'>
-                      <HashLoader size={20} color='#ffffff' />
-                      <span>Deleting...</span>
-                    </div>
-                  ) : (
-                    'Delete Post'
-                  )}
+                  Delete Post
                 </button>
               </div>
             )}
           </>
         )}
 
-        {/* Comments section */}
         <div className='mt-8'>
           <h2 className='text-2xl font-bold'>Comments</h2>
 
@@ -288,8 +259,6 @@ const PostPage = () => {
                       By {comment.author.username}
                     </div>
                   </div>
-
-                  {/* Show delete button if user is post author or comment author */}
                   {(user?.id === post.author._id ||
                     user?.id === comment.author._id) && (
                     <button

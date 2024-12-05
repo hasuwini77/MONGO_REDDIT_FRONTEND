@@ -515,6 +515,10 @@ img, video {
   height: 2rem;
 }
 
+.h-screen {
+  height: 100vh;
+}
+
 .min-h-\[200px\] {
   min-height: 200px;
 }
