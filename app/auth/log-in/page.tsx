@@ -1,17 +1,33 @@
 import Link from 'next/link'
-
 import { LogInForm } from './form'
 
 export default function LogInPage() {
   return (
-    <main className='main mt-[20vh] flex grow flex-col items-center'>
-      <div className='flex w-full grow flex-col items-center gap-12'>
-        <h1 className='text-2xl font-bold'>welcome back</h1>
+    <main className='flex min-h-screen w-full items-center justify-center bg-gradient-to-b from-indigo-600 to-purple-800 px-4 py-6 text-white sm:px-6 lg:px-8'>
+      <div className='w-full max-w-md rounded-xl bg-white p-8 shadow-lg'>
+        <h1 className='mb-6 text-center text-3xl font-semibold text-gray-800'>
+          Welcome back
+        </h1>
+
+        {/* Login Form */}
         <LogInForm />
+
+        <div className='mt-4 text-center'>
+          <Link
+            href='/auth/sign-up'
+            className='text-sm text-indigo-600 hover:underline'
+          >
+            Don&apos;t have an account? Sign up
+          </Link>
+        </div>
+
+        {/* Home Button */}
+        <div className='mt-6 text-center'>
+          <Link href='/' className='button-secondary'>
+            Home
+          </Link>
+        </div>
       </div>
-      <Link href='/auth/sign-up' className='text-zinc-500'>
-        don&apos;t have an account? sign up
-      </Link>
     </main>
   )
 }
