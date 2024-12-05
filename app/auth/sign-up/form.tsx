@@ -9,6 +9,7 @@ import { signUpSchema, SignUpValues } from 'lib/schemas'
 import { FieldError } from 'components/field-error'
 import { useAuthentication } from 'hooks/useAuthentification'
 import { useRouter } from 'next/navigation'
+import HashLoader from 'react-spinners/HashLoader'
 
 export const SignUpForm = () => {
   const { login } = useAuthentication()
@@ -47,19 +48,34 @@ export const SignUpForm = () => {
       <input
         {...register('username')}
         type='text'
-        placeholder='username'
+        placeholder='Username'
         className='input'
+        disabled={isPending}
       />
       <FieldError error={errors.username} />
+
       <input
         {...register('password')}
         type='password'
-        placeholder='password'
+        placeholder='Password'
         className='input'
+        disabled={isPending}
       />
       <FieldError error={errors.password} />
-      <button type='submit' className='button-primary' disabled={isPending}>
-        {isPending ? 'signing up...' : 'sign up'}
+
+      <button
+        type='submit'
+        className='inline-flex items-center justify-center rounded-full bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition duration-300 hover:bg-indigo-700'
+        disabled={isPending}
+      >
+        {isPending ? (
+          <div className='flex items-center justify-center gap-2'>
+            <HashLoader size={20} color='#ffffff' />
+            <span>Signing in...</span>
+          </div>
+        ) : (
+          'Sign up'
+        )}
       </button>
     </form>
   )

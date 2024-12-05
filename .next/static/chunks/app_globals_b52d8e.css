@@ -539,6 +539,10 @@ img, video {
   height: 5rem;
 }
 
+.h-5 {
+  height: 1.25rem;
+}
+
 .min-h-\[200px\] {
   min-height: 200px;
 }
@@ -557,6 +561,10 @@ img, video {
 
 .w-10 {
   width: 2.5rem;
+}
+
+.w-5 {
+  width: 1.25rem;
 }
 
 .max-w-2xl {
@@ -581,6 +589,16 @@ img, video {
 
 .grow {
   flex-grow: 1;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: 1s linear infinite spin;
 }
 
 .grid-cols-1 {
@@ -669,9 +687,18 @@ img, video {
   border-width: 1px;
 }
 
+.border-b-2 {
+  border-bottom-width: 2px;
+}
+
 .border-gray-200 {
   --tw-border-opacity: 1;
   border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
+}
+
+.border-white {
+  --tw-border-opacity: 1;
+  border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
 }
 
 .bg-zinc-50 {
