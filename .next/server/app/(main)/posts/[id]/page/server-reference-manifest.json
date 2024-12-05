@@ -3,7 +3,18 @@
     "7f2fddae5e8b8e7513eb2cb7f5528abaa56bbe0669": {
       "workers": {
         "app/(main)/posts/[id]/page": {
-          "moduleId": "[project]/.next-internal/server/app/(main)/posts/[id]/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/get-post.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "moduleId": "[project]/.next-internal/server/app/(main)/posts/[id]/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/get-post.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/actions/create-comment.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/(main)/posts/[id]/page": "action-browser"
+      }
+    },
+    "7f5f9f052ce9054477ccb9be06baa2de940e660279": {
+      "workers": {
+        "app/(main)/posts/[id]/page": {
+          "moduleId": "[project]/.next-internal/server/app/(main)/posts/[id]/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/get-post.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/actions/create-comment.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
           "async": false
         }
       },

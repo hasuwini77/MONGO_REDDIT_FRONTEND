@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { deletePost } from 'actions/delete-post'
 import { getPost } from 'actions/get-post'
 import { updatePost } from 'actions/update-post' // Added missing import
+import { CommentForm } from 'components/CommentForm'
 import { useAuthentication } from 'hooks/useAuthentification'
 import { handleServerActionError } from 'lib/error-handling'
 import { useParams, useRouter } from 'next/navigation'
@@ -255,6 +256,7 @@ const PostPage = () => {
         {/* Comments section */}
         <div className='mt-8'>
           <h2 className='text-2xl font-bold'>Comments</h2>
+
           <div className='mt-4 space-y-4'>
             {post.comments.map((comment, index) => (
               <div key={index} className='rounded border p-4'>
@@ -265,6 +267,9 @@ const PostPage = () => {
               </div>
             ))}
           </div>
+          {user && (
+            <CommentForm postId={postId} onCommentAdded={() => mutate()} />
+          )}
         </div>
       </article>
     </div>
