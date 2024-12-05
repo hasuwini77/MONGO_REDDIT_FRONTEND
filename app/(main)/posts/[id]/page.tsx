@@ -1,6 +1,7 @@
 'use client'
 
 import { useMutation } from '@tanstack/react-query'
+import { deleteComment } from 'actions/delete-comment'
 import { deletePost } from 'actions/delete-post'
 import { getPost } from 'actions/get-post'
 import { updatePost } from 'actions/update-post' // Added missing import
@@ -22,6 +23,7 @@ interface Post {
     username: string
   }
   comments: Array<{
+    _id: string
     content: string
     author: {
       _id: string
@@ -102,6 +104,25 @@ const PostPage = () => {
       toast.error(error.message)
     },
   })
+
+  // Delete Comment mutation
+
+  const { mutate: handleDeleteComment, isPending: isDeletingComment } =
+    useMutation({
+      mutationFn: async (commentId: string) => {
+        const token = localStorage.getItem('token')
+        if (!token) throw new Error('Not authenticated')
+
+        return deleteComment(postId, commentId, token)
+      },
+      onSuccess: () => {
+        mutate() // Refetch the post to get updated comments
+        toast.success('Comment deleted successfully')
+      },
+      onError: (error: Error) => {
+        toast.error(error.message)
+      },
+    })
 
   // Initialize edit form when post data is available
   useEffect(() => {
@@ -260,9 +281,38 @@ const PostPage = () => {
           <div className='mt-4 space-y-4'>
             {post.comments.map((comment, index) => (
               <div key={index} className='rounded border p-4'>
-                <p>{comment.content}</p>
-                <div className='mt-2 text-sm text-gray-500'>
-                  By {comment.author.username}
+                <div className='flex items-start justify-between'>
+                  <div>
+                    <p>{comment.content}</p>
+                    <div className='mt-2 text-sm text-gray-500'>
+                      By {comment.author.username}
+                    </div>
+                  </div>
+
+                  {/* Show delete button if user is post author or comment author */}
+                  {(user?.id === post.author._id ||
+                    user?.id === comment.author._id) && (
+                    <button
+                      onClick={() => {
+                        Swal.fire({
+                          title: 'Are you sure?',
+                          text: "You won't be able to revert this!",
+                          icon: 'warning',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Yes, delete it!',
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            handleDeleteComment(comment._id)
+                          }
+                        })
+                      }}
+                      className='text-red-500 hover:text-red-700'
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
               </div>
             ))}

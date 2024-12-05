@@ -223,17 +223,7 @@ const client = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$a
     headers: {
         'Content-Type': 'application/json'
     }
-}) // client.interceptors.response.use(
- //   (response) => {
- //     console.log('API Response:', response)
- //     return response
- //   },
- //   (error) => {
- //     console.error('API Error:', error)
- //     return Promise.reject(error)
- //   },
- // )
-;
+});
 }}),
 "[externals]/ [external] (next/dist/server/app-render/work-unit-async-storage.external.js, cjs)": (function(__turbopack_context__) {
 
@@ -256,7 +246,6 @@ module.exports = mod;
 
 var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, x: __turbopack_external_require__, y: __turbopack_external_import__, z: require } = __turbopack_context__;
 {
-// hooks/useAuthentication.ts
 __turbopack_esm__({
     "useAuthentication": (()=>useAuthentication)
 });
@@ -267,6 +256,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navi
 ;
 ;
 ;
+// Helper function to add delay
+const delay = (ms)=>new Promise((resolve)=>setTimeout(resolve, ms));
 function useAuthentication() {
     const [user, setUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const [isAuthenticated, setIsAuthenticated] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
@@ -276,10 +267,13 @@ function useAuthentication() {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
+                await delay(1000);
                 setIsLoading(false);
                 return;
             }
             __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            await delay(1000) // Add 1 second delay
+            ;
             const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].get('/auth/me');
             if (response.data) {
                 setUser(response.data);

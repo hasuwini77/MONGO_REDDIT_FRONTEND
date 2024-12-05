@@ -177,17 +177,7 @@ const client = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$a
     headers: {
         'Content-Type': 'application/json'
     }
-}) // client.interceptors.response.use(
- //   (response) => {
- //     console.log('API Response:', response)
- //     return response
- //   },
- //   (error) => {
- //     console.error('API Error:', error)
- //     return Promise.reject(error)
- //   },
- // )
-;
+});
 }}),
 "[project]/actions/create-post.ts [app-rsc] (ecmascript)": ((__turbopack_context__) => {
 "use strict";

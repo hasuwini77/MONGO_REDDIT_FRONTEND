@@ -54,6 +54,17 @@
       "layer": {
         "app/(main)/posts/[id]/page": "action-browser"
       }
+    },
+    "7f331a66336d2c7eaac7a48da85f48cfb8ced7b00d": {
+      "workers": {
+        "app/auth/sign-up/page": {
+          "moduleId": "[project]/.next-internal/server/app/auth/sign-up/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/sign-up.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/auth/sign-up/page": "action-browser"
+      }
     }
   },
   "edge": {},

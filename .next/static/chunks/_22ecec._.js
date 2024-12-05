@@ -1,5 +1,36 @@
-(globalThis.TURBOPACK = globalThis.TURBOPACK || []).push(["static/chunks/_2639ec._.js", {
+(globalThis.TURBOPACK = globalThis.TURBOPACK || []).push(["static/chunks/_22ecec._.js", {
 
+"[project]/actions/delete-comment.ts [app-client] (ecmascript)": ((__turbopack_context__) => {
+"use strict";
+
+var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, k: __turbopack_refresh__, m: module, z: require } = __turbopack_context__;
+{
+// actions/delete-comment.ts
+__turbopack_esm__({
+    "deleteComment": (()=>deleteComment)
+});
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/lib/client.ts [app-client] (ecmascript)");
+;
+const deleteComment = async (postId, commentId, token)=>{
+    try {
+        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].delete(`/posts/${postId}/comments/${commentId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return {
+            data: response.data
+        };
+    } catch (error) {
+        return {
+            error: error.response?.data?.message || 'Error deleting comment'
+        };
+    }
+};
+if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
+    __turbopack_refresh__.registerExports(module, globalThis.$RefreshHelpers$);
+}
+}}),
 "[project]/actions/delete-post.ts [app-client] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
 
@@ -307,7 +338,7 @@ const PostPage = ()=>{
             children: "Invalid post ID"
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-            lineNumber: 46,
+            lineNumber: 47,
             columnNumber: 12
         }, this);
     }
@@ -433,12 +464,12 @@ const PostPage = ()=>{
                 color: "#3B82F6"
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                lineNumber: 143,
+                lineNumber: 144,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-            lineNumber: 142,
+            lineNumber: 143,
             columnNumber: 7
         }, this);
     }
@@ -454,12 +485,12 @@ const PostPage = ()=>{
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                lineNumber: 151,
+                lineNumber: 152,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-            lineNumber: 150,
+            lineNumber: 151,
             columnNumber: 7
         }, this);
     }
@@ -471,12 +502,12 @@ const PostPage = ()=>{
                 children: "Post not found"
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                lineNumber: 162,
+                lineNumber: 163,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-            lineNumber: 161,
+            lineNumber: 162,
             columnNumber: 7
         }, this);
     }
@@ -494,7 +525,7 @@ const PostPage = ()=>{
                             className: "w-full rounded border p-2"
                         }, void 0, false, {
                             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                            lineNumber: 172,
+                            lineNumber: 173,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -503,7 +534,7 @@ const PostPage = ()=>{
                             className: "min-h-[200px] w-full rounded border p-2"
                         }, void 0, false, {
                             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                            lineNumber: 178,
+                            lineNumber: 179,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -535,25 +566,25 @@ const PostPage = ()=>{
                                                 color: "#ffffff"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                                lineNumber: 205,
+                                                lineNumber: 206,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Updating..."
                                             }, void 0, false, {
                                                 fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                                lineNumber: 206,
+                                                lineNumber: 207,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                        lineNumber: 204,
+                                        lineNumber: 205,
                                         columnNumber: 19
                                     }, this) : 'Save Changes'
                                 }, void 0, false, {
                                     fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                    lineNumber: 184,
+                                    lineNumber: 185,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -563,19 +594,19 @@ const PostPage = ()=>{
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                    lineNumber: 212,
+                                    lineNumber: 213,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                            lineNumber: 183,
+                            lineNumber: 184,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                    lineNumber: 171,
+                    lineNumber: 172,
                     columnNumber: 11
                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                     children: [
@@ -584,7 +615,7 @@ const PostPage = ()=>{
                             children: post.title
                         }, void 0, false, {
                             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                            lineNumber: 223,
+                            lineNumber: 224,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -595,7 +626,7 @@ const PostPage = ()=>{
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                            lineNumber: 224,
+                            lineNumber: 225,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -603,7 +634,7 @@ const PostPage = ()=>{
                             children: post.content
                         }, void 0, false, {
                             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                            lineNumber: 227,
+                            lineNumber: 228,
                             columnNumber: 13
                         }, this),
                         user?.id === post.author._id && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -615,7 +646,7 @@ const PostPage = ()=>{
                                     children: "Edit Post"
                                 }, void 0, false, {
                                     fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                    lineNumber: 232,
+                                    lineNumber: 233,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -645,31 +676,31 @@ const PostPage = ()=>{
                                                 color: "#ffffff"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                                lineNumber: 264,
+                                                lineNumber: 265,
                                                 columnNumber: 23
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 children: "Deleting..."
                                             }, void 0, false, {
                                                 fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                                lineNumber: 265,
+                                                lineNumber: 266,
                                                 columnNumber: 23
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                        lineNumber: 263,
+                                        lineNumber: 264,
                                         columnNumber: 21
                                     }, this) : 'Delete Post'
                                 }, void 0, false, {
                                     fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                    lineNumber: 238,
+                                    lineNumber: 239,
                                     columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                            lineNumber: 231,
+                            lineNumber: 232,
                             columnNumber: 15
                         }, this)
                     ]
@@ -682,7 +713,7 @@ const PostPage = ()=>{
                             children: "Comments"
                         }, void 0, false, {
                             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                            lineNumber: 278,
+                            lineNumber: 279,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -698,7 +729,7 @@ const PostPage = ()=>{
                                                         children: comment.content
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                                        lineNumber: 285,
+                                                        lineNumber: 286,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -709,13 +740,13 @@ const PostPage = ()=>{
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                                        lineNumber: 286,
+                                                        lineNumber: 287,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                                lineNumber: 284,
+                                                lineNumber: 285,
                                                 columnNumber: 19
                                             }, this),
                                             (user?.id === post.author._id || user?.id === comment.author._id) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -738,23 +769,23 @@ const PostPage = ()=>{
                                                 children: "Delete"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                                lineNumber: 294,
+                                                lineNumber: 295,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                        lineNumber: 283,
+                                        lineNumber: 284,
                                         columnNumber: 17
                                     }, this)
                                 }, index, false, {
                                     fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                                    lineNumber: 282,
+                                    lineNumber: 283,
                                     columnNumber: 15
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                            lineNumber: 280,
+                            lineNumber: 281,
                             columnNumber: 11
                         }, this),
                         user && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$CommentForm$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CommentForm"], {
@@ -762,24 +793,24 @@ const PostPage = ()=>{
                             onCommentAdded: ()=>mutate()
                         }, void 0, false, {
                             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                            lineNumber: 320,
+                            lineNumber: 321,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-                    lineNumber: 277,
+                    lineNumber: 278,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-            lineNumber: 169,
+            lineNumber: 170,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/(main)/posts/[id]/page.tsx",
-        lineNumber: 168,
+        lineNumber: 169,
         columnNumber: 5
     }, this);
 };
@@ -809,4 +840,4 @@ var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_
 }}),
 }]);
 
-//# sourceMappingURL=_2639ec._.js.map
+//# sourceMappingURL=_22ecec._.js.map
