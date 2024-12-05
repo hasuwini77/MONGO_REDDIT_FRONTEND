@@ -28,4 +28,7 @@
   .input {
     @apply w-full rounded-full border border-zinc-200 bg-white px-4 py-2 text-base text-zinc-800 outline-none placeholder:text-zinc-500;
   }
+  .button-danger {
+    @apply rounded bg-red-500 px-4 py-2 text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50;
+  }
 }

@@ -1,21 +1,27 @@
 'use client'
 
 import { useMutation } from '@tanstack/react-query'
+import { deletePost } from 'actions/delete-post'
 import { getPost } from 'actions/get-post'
+import { useAuthentication } from 'hooks/useAuthentification'
 import { handleServerActionError } from 'lib/error-handling'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import HashLoader from 'react-spinners/HashLoader'
+import { toast } from 'sonner'
 
 interface Post {
   _id: string
   title: string
   content: string
   author: {
+    _id: string | undefined
     username: string
   }
   comments: Array<{
     content: string
     author: {
+      _id: string
       username: string
     }
   }>
@@ -24,6 +30,8 @@ interface Post {
 
 const PostPage = () => {
   const params = useParams()
+  const router = useRouter()
+  const { user } = useAuthentication()
   const postId = params.id as string
 
   if (!postId) {
@@ -40,13 +48,31 @@ const PostPage = () => {
       if (!postId) throw new Error('Post ID is required')
       console.log('Fetching post with ID:', postId)
       const result = await getPost(postId)
-      return handleServerActionError(result) as Post // Add type assertion here
+      return handleServerActionError(result) as Post
     },
     onError: (error) => {
       console.error('Error fetching post:', error)
     },
     onSuccess: (data) => {
       console.log('Successfully fetched post:', data)
+    },
+  })
+
+  // Delete post mutation
+  const { mutate: handleDelete, isPending: isDeleting } = useMutation({
+    mutationFn: async () => {
+      const token = localStorage.getItem('token')
+      if (!token) throw new Error('Not authenticated')
+
+      await new Promise((resolve) => setTimeout(resolve, 1000)) // Optional delay
+      return deletePost(postId, token)
+    },
+    onSuccess: () => {
+      toast.success('Post deleted successfully')
+      router.push('/') // Redirect to home page after deletion
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
     },
   })
 
@@ -59,7 +85,7 @@ const PostPage = () => {
   if (isPending) {
     return (
       <div className='flex items-center justify-center p-4'>
-        <div className='text-lg'>Loading post...</div>
+        <HashLoader size={30} color='#3B82F6' />
       </div>
     )
   }
@@ -90,7 +116,34 @@ const PostPage = () => {
         <div className='mt-2 text-gray-500'>
           Posted by {post.author.username}
         </div>
+
         <div className='prose mt-6'>{post.content}</div>
+
+        {/* Delete button - only shown if user is the author */}
+        {user?.id === post.author._id && (
+          <div className='py-2'>
+            <button
+              onClick={() => {
+                if (
+                  window.confirm('Are you sure you want to delete this post?')
+                ) {
+                  handleDelete()
+                }
+              }}
+              className='button-danger rounded-md'
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <div className='flex items-center gap-2'>
+                  <HashLoader size={20} color='#ffffff' />
+                  <span>Deleting...</span>
+                </div>
+              ) : (
+                'Delete Post'
+              )}
+            </button>
+          </div>
+        )}
 
         {/* Comments section */}
         <div className='mt-8'>
