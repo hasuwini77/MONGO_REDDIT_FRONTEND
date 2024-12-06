@@ -20,7 +20,7 @@ const MyProfile = () => {
   }
 
   if (!isAuthenticated) {
-    return null // or a loading state
+    return null
   }
 
   return (

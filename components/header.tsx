@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { UserCircle } from 'lucide-react'
 import { useAuthentication } from 'hooks/useAuthentification'
+import { IconComponent } from './Icons'
 
 export const Header = () => {
   const { isAuthenticated, user, logout } = useAuthentication()
@@ -22,14 +23,16 @@ export const Header = () => {
       <div className='flex items-center gap-4 md:gap-6'>
         {isAuthenticated ? (
           <div className='flex items-center gap-4 md:gap-6'>
-            {/* User Info */}
+            {/* User Info - Modified to use IconComponent */}
             <div className='flex items-center gap-2'>
-              <UserCircle className='h-8 w-8 text-white md:h-10 md:w-10' />
+              <IconComponent
+                name={user?.iconName || 'UserCircle'}
+                className='h-8 w-8 text-white md:h-10 md:w-10'
+              />
               <span className='text-sm font-semibold text-white md:text-lg'>
                 {user?.username}
               </span>
             </div>
-
             {/* Actions */}
             <div className='flex flex-col gap-2 md:flex-row'>
               <button

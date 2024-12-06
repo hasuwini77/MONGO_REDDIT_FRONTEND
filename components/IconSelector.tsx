@@ -1,5 +1,5 @@
 import { UserCircle, User, UserCog, UserCircle2, Ghost } from 'lucide-react'
-import { VALID_ICONS } from './Profile'
+import { VALID_ICONS } from './Icons'
 
 const icons = {
   UserCircle,

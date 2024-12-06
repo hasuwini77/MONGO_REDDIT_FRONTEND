@@ -1,4 +1,4 @@
-import { IconName } from 'components/Profile'
+import { IconName } from 'components/Icons'
 
 export interface Post {
   _id: string
