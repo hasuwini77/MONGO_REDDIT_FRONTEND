@@ -14,6 +14,12 @@
     ],
     "[project]/app/_not-found/page": [
       "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
+    ],
+    "[project]/app/auth/profile/page": [
+      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
+    ],
+    "[project]/app/(main)/profile/page": [
+      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
     ]
   },
   "appUsingSizeAdjust": true,

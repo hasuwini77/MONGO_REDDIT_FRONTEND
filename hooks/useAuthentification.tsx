@@ -3,17 +3,17 @@
 import { useState, useEffect } from 'react'
 import { client } from 'lib/client'
 import { useRouter } from 'next/navigation'
-
-interface User {
-  id: string
-  username: string
-}
+import { User } from 'types/types'
 
 export function useAuthentication() {
   const [user, setUser] = useState<User | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
+
+  const updateUser = (updatedUser: User) => {
+    setUser(updatedUser)
+  }
 
   const refreshToken = async () => {
     try {
@@ -127,5 +127,6 @@ export function useAuthentication() {
     isLoading,
     login,
     logout,
+    updateUser,
   }
 }

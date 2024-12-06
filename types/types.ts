@@ -1,3 +1,5 @@
+import { IconName } from 'components/Profile'
+
 export interface Post {
   _id: string
   title: string
@@ -12,4 +14,11 @@ export interface Post {
     }
   }>
   createdAt: string
+}
+
+export interface User {
+  _id: string
+  username: string
+  iconName: IconName
+  posts: Post[]
 }
