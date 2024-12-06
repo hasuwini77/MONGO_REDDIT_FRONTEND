@@ -210,11 +210,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 ;
 const getPosts = async ()=>{
     try {
-        console.log('Server Action: Fetching all posts');
         const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["client"].get('/posts');
-        // Set up revalidation
         (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$cache$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["revalidateTag"])('posts');
-        console.log('Server Action: API response:', response.data);
         return {
             data: response.data
         };

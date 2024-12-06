@@ -55,7 +55,6 @@ const PostPage = () => {
   } = useMutation({
     mutationFn: async () => {
       if (!postId) throw new Error('Post ID is required')
-      console.log('Fetching post with ID:', postId)
       const result = await getPost(postId)
       return handleServerActionError(result) as Post
     },
@@ -63,7 +62,6 @@ const PostPage = () => {
       console.error('Error fetching post:', error)
     },
     onSuccess: (data) => {
-      console.log('Successfully fetched post:', data)
       setEditedTitle(data.title)
       setEditedContent(data.content)
       setTimeout(() => {

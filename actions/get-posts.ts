@@ -23,13 +23,9 @@ interface Post {
 
 export const getPosts = async (): Promise<ServerActionResponse<Post[]>> => {
   try {
-    console.log('Server Action: Fetching all posts')
     const response = await client.get('/posts')
-
-    // Set up revalidation
     revalidateTag('posts')
 
-    console.log('Server Action: API response:', response.data)
     return { data: response.data }
   } catch (error: any) {
     console.error(

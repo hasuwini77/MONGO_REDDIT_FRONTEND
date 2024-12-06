@@ -1,27 +1,29 @@
-import 'server-only'
+// CURRENTLY NOT USING IT in the setup
 
-import { cookies } from 'next/headers'
+// import 'server-only'
 
-const setAccessToken = async (accessToken: string) => {
-  const cookieStore = await cookies()
+// import { cookies } from 'next/headers'
 
-  cookieStore.set('access-token', accessToken, { httpOnly: true })
-}
+// const setAccessToken = async (accessToken: string) => {
+//   const cookieStore = await cookies()
 
-const deleteAccessToken = async () => {
-  const cookieStore = await cookies()
+//   cookieStore.set('access-token', accessToken, { httpOnly: true })
+// }
 
-  cookieStore.delete('access-token')
-}
+// const deleteAccessToken = async () => {
+//   const cookieStore = await cookies()
 
-const getAccessToken = async () => {
-  const cookieStore = await cookies()
+//   cookieStore.delete('access-token')
+// }
 
-  return cookieStore.get('access-token')
-}
+// const getAccessToken = async () => {
+//   const cookieStore = await cookies()
 
-export const auth = {
-  setAccessToken,
-  deleteAccessToken,
-  getAccessToken,
-}
+//   return cookieStore.get('access-token')
+// }
+
+// export const auth = {
+//   setAccessToken,
+//   deleteAccessToken,
+//   getAccessToken,
+// }

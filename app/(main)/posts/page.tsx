@@ -5,6 +5,7 @@ import { getPosts } from 'actions/get-posts'
 import { handleServerActionError } from 'lib/error-handling'
 import Link from 'next/link'
 import { useEffect } from 'react'
+import { toast } from 'sonner'
 import { Post } from 'types/types'
 
 const MyPosts = () => {
@@ -21,13 +22,10 @@ const MyPosts = () => {
     onError: (error) => {
       console.error('Error fetching posts:', error)
     },
-    onSuccess: (data) => {
-      console.log('Successfully fetched posts:', data) // Success log
-    },
+    onSuccess: (data) => {},
   })
 
   useEffect(() => {
-    console.log('Effect triggered') // Debug log
     mutate()
   }, [mutate])
 

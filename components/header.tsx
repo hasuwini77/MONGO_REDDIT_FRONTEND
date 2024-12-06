@@ -33,17 +33,16 @@ export const Header = () => {
             {/* Actions */}
             <div className='flex flex-col gap-2 md:flex-row'>
               <button
-                onClick={() => logout()}
-                className='button-secondary rounded-lg bg-red-500 px-4 py-1 text-sm text-white transition duration-300 hover:bg-red-700 md:px-6 md:py-2 md:text-base'
-              >
-                Log out
-              </button>
-
-              <button
                 onClick={() => router.push('/create-post')}
                 className='button-primary rounded-lg bg-green-500 px-5 py-1 text-sm text-white transition duration-300 hover:bg-green-700 md:px-8 md:py-2 md:text-base'
               >
                 Create Post
+              </button>
+              <button
+                onClick={() => logout()}
+                className='button-secondary rounded-lg bg-red-500 px-4 py-1 text-sm text-white transition duration-300 hover:bg-red-700 md:px-6 md:py-2 md:text-base'
+              >
+                Log out
               </button>
             </div>
           </div>
