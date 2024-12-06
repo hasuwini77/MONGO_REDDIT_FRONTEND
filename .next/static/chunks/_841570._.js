@@ -106,7 +106,6 @@ var _s = __turbopack_refresh__.signature();
 ;
 ;
 ;
-// Helper function to add delay
 const delay = (ms)=>new Promise((resolve)=>setTimeout(resolve, ms));
 function useAuthentication() {
     _s();

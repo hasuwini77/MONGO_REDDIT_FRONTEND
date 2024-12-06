@@ -66,7 +66,9 @@ const PostPage = () => {
       console.log('Successfully fetched post:', data)
       setEditedTitle(data.title)
       setEditedContent(data.content)
-      setLoading(false) // Hide loader once data is loaded
+      setTimeout(() => {
+        setLoading(false)
+      }, 1300)
     },
   })
 
@@ -127,7 +129,7 @@ const PostPage = () => {
     }
   }, [mutate, postId])
 
-  if (loading || !user) {
+  if ((loading && user) || (loading && !user)) {
     // Show loader until data and user authentication are ready
     return (
       <div className='flex h-screen items-center justify-center'>

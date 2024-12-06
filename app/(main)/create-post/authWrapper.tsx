@@ -1,4 +1,3 @@
-// app/create-post/auth-wrapper.tsx
 'use client'
 
 import { useEffect } from 'react'
@@ -21,7 +20,7 @@ export function CreatePostAuthWrapper() {
   }
 
   if (!isAuthenticated) {
-    return null // Will redirect in useEffect
+    return null
   }
 
   return <CreatePostForm />

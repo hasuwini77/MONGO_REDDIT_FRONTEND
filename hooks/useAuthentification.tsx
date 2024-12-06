@@ -9,7 +9,6 @@ interface User {
   username: string
 }
 
-// Helper function to add delay
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export function useAuthentication() {
