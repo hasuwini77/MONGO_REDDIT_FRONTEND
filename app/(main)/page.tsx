@@ -7,7 +7,7 @@ export const fetchCache = 'force-cache'
 export default function Home() {
   return (
     <div className='main'>
-      <h1> Home Page</h1>
+      <h1 className='hidden'>REDDIT IS DA SHITTT</h1>
       <div>
         <MyPosts />
       </div>

@@ -11,7 +11,7 @@ const MyProfile = () => {
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      router.push('/auth/login')
+      router.push('/auth/log-in')
     }
   }, [isLoading, isAuthenticated, router])
 

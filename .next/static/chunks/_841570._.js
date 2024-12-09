@@ -125,6 +125,7 @@ function useAuthentication() {
         "useAuthentication.useEffect": ()=>{
             const handleUserUpdate = {
                 "useAuthentication.useEffect.handleUserUpdate": (event)=>{
+                    //adding fake delay
                     setTimeout({
                         "useAuthentication.useEffect.handleUserUpdate": ()=>{
                             setUser(event.detail);
