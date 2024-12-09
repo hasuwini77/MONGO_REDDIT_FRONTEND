@@ -24,15 +24,17 @@ export const Header = () => {
         {isAuthenticated ? (
           <div className='flex items-center gap-4 md:gap-6'>
             {/* User Info - Modified to use IconComponent */}
-            <div className='flex items-center gap-2'>
-              <IconComponent
-                name={user?.iconName || 'UserCircle'}
-                className='h-8 w-8 text-white md:h-10 md:w-10'
-              />
-              <span className='text-sm font-semibold text-white md:text-lg'>
-                {user?.username}
-              </span>
-            </div>
+            <Link href='/profile'>
+              <div className='flex items-center gap-2'>
+                <IconComponent
+                  name={user?.iconName || 'UserCircle'}
+                  className='h-8 w-8 text-white md:h-10 md:w-10'
+                />
+                <span className='text-sm font-semibold text-white md:text-lg'>
+                  {user?.username}
+                </span>
+              </div>
+            </Link>
             {/* Actions */}
             <div className='flex flex-col gap-2 md:flex-row'>
               <button
