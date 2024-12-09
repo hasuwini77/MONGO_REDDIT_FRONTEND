@@ -4,5 +4,7 @@
   "/(main)/posts/[id]/page": "app/(main)/posts/[id]/page.js",
   "/auth/log-in/page": "app/auth/log-in/page.js",
   "/(main)/create-post/page": "app/(main)/create-post/page.js",
-  "/(main)/profile/page": "app/(main)/profile/page.js"
+  "/(main)/profile/page": "app/(main)/profile/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/auth/profile/page": "app/auth/profile/page.js"
 }

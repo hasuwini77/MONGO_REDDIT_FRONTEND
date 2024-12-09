@@ -15,10 +15,10 @@ export interface Post {
   }>
   createdAt: string
 }
-
 export interface User {
   _id: string
   username: string
   iconName: IconName
-  posts: Post[]
+  createdAt: Date
+  updatedAt: Date
 }

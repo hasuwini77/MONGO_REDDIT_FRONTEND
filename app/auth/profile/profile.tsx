@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 const MyProfile = () => {
-  const { isAuthenticated, isLoading } = useAuthentication()
+  const { isAuthenticated, isLoading, user, updateUser } = useAuthentication()
   const router = useRouter()
 
   useEffect(() => {
@@ -19,13 +19,13 @@ const MyProfile = () => {
     return <div>Loading...</div>
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user) {
     return null
   }
 
   return (
     <div className='container mx-auto px-4 py-8'>
-      <Profile />
+      <Profile user={user} onUpdateSuccess={updateUser} />
     </div>
   )
 }

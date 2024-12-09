@@ -6,14 +6,42 @@ import { useRouter } from 'next/navigation'
 import { User } from 'types/types'
 
 export function useAuthentication() {
-  const [user, setUser] = useState<User | null>(null)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [user, setUser] = useState<User | null>(() => {
+    if (typeof window !== 'undefined') {
+      const userData = localStorage.getItem('userData')
+      return userData ? JSON.parse(userData) : null
+    }
+    return null
+  })
+  const [isAuthenticated, setIsAuthenticated] = useState(!!user)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
 
-  const updateUser = (updatedUser: User) => {
-    setUser(updatedUser)
-  }
+  // Listen for user update events
+  useEffect(() => {
+    const handleUserUpdate = (event: CustomEvent<User>) => {
+      //adding fake delay
+      setTimeout(() => {
+        setUser(event.detail)
+      }, 700)
+
+      setIsAuthenticated(true)
+    }
+
+    window.addEventListener('user-updated', handleUserUpdate as EventListener)
+    return () => {
+      window.removeEventListener(
+        'user-updated',
+        handleUserUpdate as EventListener,
+      )
+    }
+  }, [])
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('userData', JSON.stringify(user))
+    }
+  }, [user])
 
   const refreshToken = async () => {
     try {
@@ -42,18 +70,45 @@ export function useAuthentication() {
       try {
         const response = await client.get('/auth/me')
         if (response.data) {
-          setUser(response.data)
+          const storedUserData = localStorage.getItem('userData')
+          const parsedStoredData = storedUserData
+            ? JSON.parse(storedUserData)
+            : null
+
+          const userData = {
+            ...response.data,
+            iconName:
+              parsedStoredData?.iconName ||
+              response.data.iconName ||
+              'UserCircle',
+          }
+
+          setUser(userData)
+          localStorage.setItem('userData', JSON.stringify(userData))
           setIsAuthenticated(true)
         }
       } catch (error: any) {
-        // If we get a 401 error, try to refresh the token
         if (error?.response?.status === 401) {
           const newToken = await refreshToken()
           if (newToken) {
-            // Retry the original request
             const retryResponse = await client.get('/auth/me')
             if (retryResponse.data) {
-              setUser(retryResponse.data)
+              // Same logic for retry response
+              const storedUserData = localStorage.getItem('userData')
+              const parsedStoredData = storedUserData
+                ? JSON.parse(storedUserData)
+                : null
+
+              const userData = {
+                ...retryResponse.data,
+                iconName:
+                  parsedStoredData?.iconName ||
+                  retryResponse.data.iconName ||
+                  'UserCircle',
+              }
+
+              setUser(userData)
+              localStorage.setItem('userData', JSON.stringify(userData))
               setIsAuthenticated(true)
             }
           }
@@ -64,6 +119,7 @@ export function useAuthentication() {
     } catch (error) {
       console.error('Auth check error:', error)
       localStorage.removeItem('token')
+      localStorage.removeItem('userData')
       delete client.defaults.headers.common['Authorization']
       setUser(null)
       setIsAuthenticated(false)
@@ -79,7 +135,6 @@ export function useAuthentication() {
       async (error) => {
         const originalRequest = error.config
 
-        // If we get a 401 error and haven't tried to refresh yet
         if (error.response?.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true
 
@@ -97,13 +152,24 @@ export function useAuthentication() {
       },
     )
 
-    // Clean up interceptor on unmount
     return () => {
       client.interceptors.response.eject(interceptor)
     }
   }, [])
 
+  // Initialize user from localStorage
   useEffect(() => {
+    const storedUserData = localStorage.getItem('userData')
+    if (storedUserData) {
+      try {
+        const parsedUserData = JSON.parse(storedUserData)
+        setUser(parsedUserData)
+        setIsAuthenticated(true)
+      } catch (error) {
+        console.error('Error parsing stored user data:', error)
+        localStorage.removeItem('userData')
+      }
+    }
     checkAuth()
   }, [])
 
@@ -115,10 +181,21 @@ export function useAuthentication() {
 
   const logout = async () => {
     localStorage.removeItem('token')
+    localStorage.removeItem('userData')
     delete client.defaults.headers.common['Authorization']
     setUser(null)
     setIsAuthenticated(false)
     router.push('/auth/log-in')
+  }
+
+  const updateUser = (updatedUser: User) => {
+    setUser(updatedUser)
+    setIsAuthenticated(true)
+    localStorage.setItem('userData', JSON.stringify(updatedUser))
+    // Dispatch event to notify other components
+    window.dispatchEvent(
+      new CustomEvent('user-updated', { detail: updatedUser }),
+    )
   }
 
   return {

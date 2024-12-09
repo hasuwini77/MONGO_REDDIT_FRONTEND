@@ -5,6 +5,7 @@ import { Toaster } from 'sonner'
 import './globals.css'
 import { QueryClientProvider } from 'providers/query-client-provider'
 import { cn } from 'utils/classnames'
+import { Providers } from './(main)/providers'
 
 const albertSans = Albert_Sans({ subsets: ['latin'] })
 
@@ -27,8 +28,10 @@ export default function RootLayout({
         )}
       >
         <QueryClientProvider>
-          {children}
-          <Toaster />
+          <Providers>
+            {children}
+            <Toaster />
+          </Providers>
         </QueryClientProvider>
       </body>
     </html>

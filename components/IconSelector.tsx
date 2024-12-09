@@ -1,6 +1,8 @@
 import { UserCircle, User, UserCog, UserCircle2, Ghost } from 'lucide-react'
 import { VALID_ICONS } from './Icons'
 
+import type { IconName } from './Icons'
+
 const icons = {
   UserCircle,
   User,
@@ -8,8 +10,6 @@ const icons = {
   UserCircle2,
   Ghost,
 }
-
-type IconName = keyof typeof icons
 
 interface IconSelectorProps {
   selected: IconName
@@ -22,7 +22,12 @@ export const IconSelector = ({ selected, onChange }: IconSelectorProps) => {
       {Object.entries(VALID_ICONS).map(([name, Icon]) => (
         <button
           key={name}
-          onClick={() => onChange(name as IconName)}
+          type='button'
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            onChange(name as IconName)
+          }}
           className={`rounded-full p-2 transition-colors hover:bg-gray-100 ${selected === name ? 'bg-purple-100 ring-2 ring-purple-500' : ''}`}
         >
           <Icon

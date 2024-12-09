@@ -4,7 +4,6 @@ import { useMutation } from '@tanstack/react-query'
 import { deleteComment } from 'actions/delete-comment'
 import { deletePost } from 'actions/delete-post'
 import { getPost } from 'actions/get-post'
-import { updatePost } from 'actions/update-post'
 import { CommentForm } from 'components/CommentForm'
 import { useAuthentication } from 'hooks/useAuthentification'
 import { handleServerActionError } from 'lib/error-handling'
@@ -208,7 +207,7 @@ const PostPage = () => {
             </div>
             <div className='prose mt-6'>{post.content}</div>
 
-            {user?.id === post.author._id && (
+            {user?._id === post.author._id && (
               <div className='space-x-2 py-2'>
                 <button
                   onClick={() => setIsEditing(true)}
@@ -259,8 +258,8 @@ const PostPage = () => {
                       By {comment.author.username}
                     </div>
                   </div>
-                  {(user?.id === post.author._id ||
-                    user?.id === comment.author._id) && (
+                  {(user?._id === post.author._id ||
+                    user?._id === comment.author._id) && (
                     <button
                       onClick={() => {
                         Swal.fire({
@@ -296,3 +295,10 @@ const PostPage = () => {
 }
 
 export default PostPage
+function updatePost(
+  postId: string,
+  token: string,
+  arg2: { title: string; content: string },
+): any {
+  throw new Error('Function not implemented.')
+}

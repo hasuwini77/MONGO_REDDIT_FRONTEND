@@ -108,13 +108,48 @@ var _s = __turbopack_refresh__.signature();
 ;
 function useAuthentication() {
     _s();
-    const [user, setUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    const [isAuthenticated, setIsAuthenticated] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [user, setUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        "useAuthentication.useState": ()=>{
+            if ("TURBOPACK compile-time truthy", 1) {
+                const userData = localStorage.getItem('userData');
+                return userData ? JSON.parse(userData) : null;
+            }
+            "TURBOPACK unreachable";
+        }
+    }["useAuthentication.useState"]);
+    const [isAuthenticated, setIsAuthenticated] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(!!user);
     const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
-    const updateUser = (updatedUser)=>{
-        setUser(updatedUser);
-    };
+    // Listen for user update events
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useAuthentication.useEffect": ()=>{
+            const handleUserUpdate = {
+                "useAuthentication.useEffect.handleUserUpdate": (event)=>{
+                    setTimeout({
+                        "useAuthentication.useEffect.handleUserUpdate": ()=>{
+                            setUser(event.detail);
+                        }
+                    }["useAuthentication.useEffect.handleUserUpdate"], 700);
+                    setIsAuthenticated(true);
+                }
+            }["useAuthentication.useEffect.handleUserUpdate"];
+            window.addEventListener('user-updated', handleUserUpdate);
+            return ({
+                "useAuthentication.useEffect": ()=>{
+                    window.removeEventListener('user-updated', handleUserUpdate);
+                }
+            })["useAuthentication.useEffect"];
+        }
+    }["useAuthentication.useEffect"], []);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "useAuthentication.useEffect": ()=>{
+            if (user) {
+                localStorage.setItem('userData', JSON.stringify(user));
+            }
+        }
+    }["useAuthentication.useEffect"], [
+        user
+    ]);
     const refreshToken = async ()=>{
         try {
             const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].post('/auth/refresh-token');
@@ -139,18 +174,31 @@ function useAuthentication() {
             try {
                 const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].get('/auth/me');
                 if (response.data) {
-                    setUser(response.data);
+                    const storedUserData = localStorage.getItem('userData');
+                    const parsedStoredData = storedUserData ? JSON.parse(storedUserData) : null;
+                    const userData = {
+                        ...response.data,
+                        iconName: parsedStoredData?.iconName || response.data.iconName || 'UserCircle'
+                    };
+                    setUser(userData);
+                    localStorage.setItem('userData', JSON.stringify(userData));
                     setIsAuthenticated(true);
                 }
             } catch (error) {
-                // If we get a 401 error, try to refresh the token
                 if (error?.response?.status === 401) {
                     const newToken = await refreshToken();
                     if (newToken) {
-                        // Retry the original request
                         const retryResponse = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].get('/auth/me');
                         if (retryResponse.data) {
-                            setUser(retryResponse.data);
+                            // Same logic for retry response
+                            const storedUserData = localStorage.getItem('userData');
+                            const parsedStoredData = storedUserData ? JSON.parse(storedUserData) : null;
+                            const userData = {
+                                ...retryResponse.data,
+                                iconName: parsedStoredData?.iconName || retryResponse.data.iconName || 'UserCircle'
+                            };
+                            setUser(userData);
+                            localStorage.setItem('userData', JSON.stringify(userData));
                             setIsAuthenticated(true);
                         }
                     }
@@ -161,6 +209,7 @@ function useAuthentication() {
         } catch (error) {
             console.error('Auth check error:', error);
             localStorage.removeItem('token');
+            localStorage.removeItem('userData');
             delete __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'];
             setUser(null);
             setIsAuthenticated(false);
@@ -176,7 +225,6 @@ function useAuthentication() {
             }["useAuthentication.useEffect.use[interceptor]"], {
                 "useAuthentication.useEffect.use[interceptor]": async (error)=>{
                     const originalRequest = error.config;
-                    // If we get a 401 error and haven't tried to refresh yet
                     if (error.response?.status === 401 && !originalRequest._retry) {
                         originalRequest._retry = true;
                         try {
@@ -192,7 +240,6 @@ function useAuthentication() {
                     return Promise.reject(error);
                 }
             }["useAuthentication.useEffect.use[interceptor]"]);
-            // Clean up interceptor on unmount
             return ({
                 "useAuthentication.useEffect": ()=>{
                     __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].interceptors.response.eject(interceptor);
@@ -200,8 +247,20 @@ function useAuthentication() {
             })["useAuthentication.useEffect"];
         }
     }["useAuthentication.useEffect"], []);
+    // Initialize user from localStorage
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "useAuthentication.useEffect": ()=>{
+            const storedUserData = localStorage.getItem('userData');
+            if (storedUserData) {
+                try {
+                    const parsedUserData = JSON.parse(storedUserData);
+                    setUser(parsedUserData);
+                    setIsAuthenticated(true);
+                } catch (error) {
+                    console.error('Error parsing stored user data:', error);
+                    localStorage.removeItem('userData');
+                }
+            }
             checkAuth();
         }
     }["useAuthentication.useEffect"], []);
@@ -212,10 +271,20 @@ function useAuthentication() {
     };
     const logout = async ()=>{
         localStorage.removeItem('token');
+        localStorage.removeItem('userData');
         delete __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'];
         setUser(null);
         setIsAuthenticated(false);
         router.push('/auth/log-in');
+    };
+    const updateUser = (updatedUser)=>{
+        setUser(updatedUser);
+        setIsAuthenticated(true);
+        localStorage.setItem('userData', JSON.stringify(updatedUser));
+        // Dispatch event to notify other components
+        window.dispatchEvent(new CustomEvent('user-updated', {
+            detail: updatedUser
+        }));
     };
     return {
         user,
@@ -226,7 +295,7 @@ function useAuthentication() {
         updateUser
     };
 }
-_s(useAuthentication, "rxJPnouoX2GZoWBOqfi7rYCigaY=", false, function() {
+_s(useAuthentication, "35lXtrnq8PwlvdOwun1InGZwpdA=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];

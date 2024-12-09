@@ -10,11 +10,11 @@ import {
 } from 'lucide-react'
 
 export const VALID_ICONS = {
-  UserCircle: UserCircle,
-  User: User,
-  UserCog: UserCog,
-  UserCircle2: UserCircle2,
-  Ghost: Ghost,
+  UserCircle,
+  User,
+  UserCog,
+  UserCircle2,
+  Ghost,
 } as const
 
 export type IconName = keyof typeof VALID_ICONS
@@ -26,6 +26,7 @@ export const IconComponent = ({
   name: IconName
   className?: string
 }) => {
-  const Icon = VALID_ICONS[name]
+  console.log('Rendering Icon:', name)
+  const Icon = VALID_ICONS[name] || VALID_ICONS['UserCircle']
   return <Icon className={className} />
 }

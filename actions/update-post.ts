@@ -1,18 +1,38 @@
 import { client } from 'lib/client'
+import type { IconName } from '../components/Icons'
 
-export const updatePost = async (
-  postId: string,
+interface UpdateProfileData {
+  username: string
+  iconName: IconName
+}
+
+export const updateProfile = async (
   token: string,
-  updateData: { title: string; content: string },
+  updateData: UpdateProfileData,
 ) => {
   try {
-    const response = await client.put(`/posts/${postId}`, updateData, {
+    const updateResponse = await client.put('/auth/profile', updateData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-    return { data: response.data }
+
+    const userResponse = await client.get('/auth/me', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    localStorage.setItem('userData', JSON.stringify(userResponse.data))
+
+    return {
+      data: userResponse.data,
+      error: null,
+    }
   } catch (error: any) {
-    return { error: error.response?.data?.message || 'Error updating post' }
+    return {
+      data: null,
+      error: error.response?.data?.message || 'Error updating profile',
+    }
   }
 }

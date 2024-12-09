@@ -1,6 +1,6 @@
 import { Header } from 'components/header'
 
-export default function MainLayout({
+export default function ProfileLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
