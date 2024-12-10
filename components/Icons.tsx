@@ -26,7 +26,6 @@ export const IconComponent = ({
   name: IconName
   className?: string
 }) => {
-  console.log('Rendering Icon:', name)
   const Icon = VALID_ICONS[name] || VALID_ICONS['UserCircle']
   return <Icon className={className} />
 }

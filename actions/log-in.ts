@@ -11,14 +11,18 @@ export const logIn = async (
     const parsedData = logInSchema.parse(data)
     const response = await client.post('/auth/log-in', parsedData)
 
-    // Check if we have both token and user in the response
-    if (!response.data.token || !response.data.user) {
+    if (
+      !response.data.token ||
+      !response.data.user ||
+      !response.data.refreshToken
+    ) {
       return { error: 'Invalid response from server' }
     }
 
     return {
       token: response.data.token,
       user: response.data.user,
+      refreshToken: response.data.refreshToken,
     }
   } catch (error) {
     return handleAxiosError(error)

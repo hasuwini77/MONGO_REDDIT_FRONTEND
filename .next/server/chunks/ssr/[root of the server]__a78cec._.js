@@ -242,7 +242,10 @@ const handleServerActionError = (response)=>{
         throw new Error(response.error);
     }
     if ('token' in response) {
-        return response.token;
+        return response.user;
+    }
+    if ('refreshToken' in response) {
+        return response.user;
     }
     return response.data;
 };
@@ -312,15 +315,15 @@ const logIn = async (data)=>{
     try {
         const parsedData = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$schemas$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["logInSchema"].parse(data);
         const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["client"].post('/auth/log-in', parsedData);
-        // Check if we have both token and user in the response
-        if (!response.data.token || !response.data.user) {
+        if (!response.data.token || !response.data.user || !response.data.refreshToken) {
             return {
                 error: 'Invalid response from server'
             };
         }
         return {
             token: response.data.token,
-            user: response.data.user
+            user: response.data.user,
+            refreshToken: response.data.refreshToken
         };
     } catch (error) {
         return (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$error$2d$handling$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["handleAxiosError"])(error);

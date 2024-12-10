@@ -45,9 +45,18 @@ export function useAuthentication() {
 
   const refreshToken = async () => {
     try {
-      const response = await client.post('/auth/refresh-token')
+      const storedRefreshToken = localStorage.getItem('refreshToken') // Get stored refresh token
+
+      const response = await client.post('/auth/refresh-token', {
+        refreshToken: storedRefreshToken, // Send it in the request
+      })
+
       const newToken = response.data.token
+      // Store both tokens
       localStorage.setItem('token', newToken)
+      localStorage.setItem('refreshToken', response.data.refreshToken) // Store new refresh token if provided
+
+      // Update authorization header
       client.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
       return newToken
     } catch (error) {
@@ -173,9 +182,12 @@ export function useAuthentication() {
     checkAuth()
   }, [])
 
-  const login = async (token: string) => {
+  const login = async (token: string, refreshToken: string) => {
     localStorage.setItem('token', token)
+    localStorage.setItem('refreshToken', refreshToken)
+
     client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
     await checkAuth()
   }
 

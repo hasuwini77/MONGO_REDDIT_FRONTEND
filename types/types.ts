@@ -15,8 +15,9 @@ export interface Post {
   }>
   createdAt: string
 }
+
 export interface User {
-  _id: string
+  id: string
   username: string
   iconName: IconName
   createdAt: Date

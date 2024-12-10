@@ -5,7 +5,6 @@ import { getPosts } from 'actions/get-posts'
 import { handleServerActionError } from 'lib/error-handling'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { toast } from 'sonner'
 import { Post } from 'types/types'
 
 const MyPosts = () => {

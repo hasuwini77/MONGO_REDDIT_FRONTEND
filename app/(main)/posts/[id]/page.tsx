@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 import HashLoader from 'react-spinners/HashLoader'
 import { toast } from 'sonner'
 import Swal from 'sweetalert2'
+import { User } from 'types/types'
 
 interface Post {
   _id: string
@@ -35,7 +36,7 @@ interface Post {
 const PostPage = () => {
   const params = useParams()
   const router = useRouter()
-  const { user } = useAuthentication()
+  const { user } = useAuthentication() as { user: User | null }
   const postId = params.id as string
 
   const [isEditing, setIsEditing] = useState(false)
@@ -77,7 +78,7 @@ const PostPage = () => {
       return deletePost(postId, token)
     },
     onSuccess: () => {
-      router.push('/') // Redirect to home page after deletion
+      router.push('/')
     },
     onError: (error: Error) => {
       toast.error(error.message)
@@ -125,6 +126,12 @@ const PostPage = () => {
       mutate()
     }
   }, [mutate, postId])
+
+  useEffect(() => {
+    console.log('Current user ID:', user?.id)
+    console.log('Post author ID:', post?.author._id)
+    console.log('Are they equal?', user?.id === post?.author._id)
+  }, [user, post])
 
   if ((loading && user) || (loading && !user)) {
     // Show loader until data and user authentication are ready
@@ -207,7 +214,7 @@ const PostPage = () => {
             </div>
             <div className='prose mt-6'>{post.content}</div>
 
-            {user?._id === post.author._id && (
+            {user?.id === post.author._id && (
               <div className='space-x-2 py-2'>
                 <button
                   onClick={() => setIsEditing(true)}
@@ -258,8 +265,8 @@ const PostPage = () => {
                       By {comment.author.username}
                     </div>
                   </div>
-                  {(user?._id === post.author._id ||
-                    user?._id === comment.author._id) && (
+                  {(user?.id === post.author._id ||
+                    user?.id === comment.author._id) && (
                     <button
                       onClick={() => {
                         Swal.fire({
@@ -295,6 +302,7 @@ const PostPage = () => {
 }
 
 export default PostPage
+
 function updatePost(
   postId: string,
   token: string,

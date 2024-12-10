@@ -245,9 +245,17 @@ function useAuthentication() {
     ]);
     const refreshToken = async ()=>{
         try {
-            const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].post('/auth/refresh-token');
+            const storedRefreshToken = localStorage.getItem('refreshToken') // Get stored refresh token
+            ;
+            const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].post('/auth/refresh-token', {
+                refreshToken: storedRefreshToken
+            });
             const newToken = response.data.token;
+            // Store both tokens
             localStorage.setItem('token', newToken);
+            localStorage.setItem('refreshToken', response.data.refreshToken) // Store new refresh token if provided
+            ;
+            // Update authorization header
             __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
             return newToken;
         } catch (error) {
@@ -347,8 +355,9 @@ function useAuthentication() {
         }
         checkAuth();
     }, []);
-    const login = async (token)=>{
+    const login = async (token, refreshToken)=>{
         localStorage.setItem('token', token);
+        localStorage.setItem('refreshToken', refreshToken);
         __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${token}`;
         await checkAuth();
     };

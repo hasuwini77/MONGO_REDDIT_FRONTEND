@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 export type ServerActionResponse<T = any> =
   | { data: T; error?: never } // Success with data
   | { token: string; user: T; error?: never } // Success with token and user
+  | { refreshToken: string; user: T; error?: never } // RefreshToken? with token and user
   | { data?: never; error: string } // Error case
 
 export const handleServerActionError = <T>(
@@ -15,7 +16,10 @@ export const handleServerActionError = <T>(
     throw new Error(response.error)
   }
   if ('token' in response) {
-    return response.token as unknown as T
+    return response.user
+  }
+  if ('refreshToken' in response) {
+    return response.user
   }
   return response.data
 }

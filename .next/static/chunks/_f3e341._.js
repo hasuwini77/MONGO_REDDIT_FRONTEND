@@ -5,7 +5,6 @@
 
 var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, k: __turbopack_refresh__, m: module, z: require } = __turbopack_context__;
 {
-// actions/get-posts.ts
 /* __next_internal_action_entry_do_not_use__ {"7f1fbe0d26fad4b7367f38de41d07fac440da07a99":"getPosts"} */ __turbopack_esm__({
     "getPosts": (()=>getPosts)
 });
@@ -35,7 +34,10 @@ const handleServerActionError = (response)=>{
         throw new Error(response.error);
     }
     if ('token' in response) {
-        return response.token;
+        return response.user;
+    }
+    if ('refreshToken' in response) {
+        return response.user;
     }
     return response.data;
 };
@@ -115,12 +117,12 @@ const MyPosts = ()=>{
                 children: "Loading posts..."
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 35,
+                lineNumber: 34,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/page.tsx",
-            lineNumber: 34,
+            lineNumber: 33,
             columnNumber: 7
         }, this);
     }
@@ -136,12 +138,12 @@ const MyPosts = ()=>{
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 43,
+                lineNumber: 42,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/page.tsx",
-            lineNumber: 42,
+            lineNumber: 41,
             columnNumber: 7
         }, this);
     }
@@ -153,12 +155,12 @@ const MyPosts = ()=>{
                 children: "No posts found"
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 54,
+                lineNumber: 53,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/page.tsx",
-            lineNumber: 53,
+            lineNumber: 52,
             columnNumber: 7
         }, this);
     }
@@ -170,7 +172,7 @@ const MyPosts = ()=>{
                 children: "All Posts"
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 61,
+                lineNumber: 60,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -185,7 +187,7 @@ const MyPosts = ()=>{
                                     children: post.title
                                 }, void 0, false, {
                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                    lineNumber: 73,
+                                    lineNumber: 72,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -193,7 +195,7 @@ const MyPosts = ()=>{
                                     children: post.content.length > 150 ? `${post.content.substring(0, 150)}...` : post.content
                                 }, void 0, false, {
                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                    lineNumber: 78,
+                                    lineNumber: 77,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -206,7 +208,7 @@ const MyPosts = ()=>{
                                             children: post.author.username
                                         }, void 0, false, {
                                             fileName: "[project]/app/(main)/posts/page.tsx",
-                                            lineNumber: 87,
+                                            lineNumber: 86,
                                             columnNumber: 17
                                         }, this),
                                         ' ',
@@ -215,7 +217,7 @@ const MyPosts = ()=>{
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                    lineNumber: 85,
+                                    lineNumber: 84,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -227,29 +229,29 @@ const MyPosts = ()=>{
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                    lineNumber: 94,
+                                    lineNumber: 93,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/(main)/posts/page.tsx",
-                            lineNumber: 71,
+                            lineNumber: 70,
                             columnNumber: 13
                         }, this)
                     }, post._id, false, {
                         fileName: "[project]/app/(main)/posts/page.tsx",
-                        lineNumber: 66,
+                        lineNumber: 65,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 64,
+                lineNumber: 63,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/(main)/posts/page.tsx",
-        lineNumber: 60,
+        lineNumber: 59,
         columnNumber: 5
     }, this);
 };

@@ -196,7 +196,6 @@ const client = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$a
 
 var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, x: __turbopack_external_require__, y: __turbopack_external_import__, z: require } = __turbopack_context__;
 {
-// actions/get-posts.ts
 /* __next_internal_action_entry_do_not_use__ {"7f1fbe0d26fad4b7367f38de41d07fac440da07a99":"getPosts"} */ __turbopack_esm__({
     "getPosts": (()=>getPosts)
 });

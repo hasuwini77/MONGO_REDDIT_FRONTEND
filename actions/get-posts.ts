@@ -1,4 +1,3 @@
-// actions/get-posts.ts
 'use server'
 
 import { client } from 'lib/client'
