@@ -4,6 +4,8 @@ import { useMutation } from '@tanstack/react-query'
 import { deleteComment } from 'actions/delete-comment'
 import { deletePost } from 'actions/delete-post'
 import { getPost } from 'actions/get-post'
+import { updateComment } from 'actions/update-comment'
+import { updatePost } from 'actions/update-post'
 import { CommentForm } from 'components/CommentForm'
 import { useAuthentication } from 'hooks/useAuthentification'
 import { handleServerActionError } from 'lib/error-handling'
@@ -42,6 +44,8 @@ const PostPage = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [editedTitle, setEditedTitle] = useState('')
   const [editedContent, setEditedContent] = useState('')
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null)
+  const [editedCommentContent, setEditedCommentContent] = useState('')
   const [loading, setLoading] = useState(true)
 
   if (!postId) {
@@ -99,6 +103,26 @@ const PostPage = () => {
       setIsEditing(false)
       mutate() // Refetch the post to get updated data
       toast.success('Post updated successfully')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
+    },
+  })
+
+  const { mutate: handleUpdateComment } = useMutation({
+    mutationFn: async (commentId: string) => {
+      const token = localStorage.getItem('token')
+      if (!token) throw new Error('Not authenticated')
+
+      return updateComment(postId, commentId, token, {
+        content: editedCommentContent,
+      })
+    },
+    onSuccess: () => {
+      setEditingCommentId(null)
+      setEditedCommentContent('')
+      mutate() // Refetch the post to get updated data
+      toast.success('Comment updated successfully')
     },
     onError: (error: Error) => {
       toast.error(error.message)
@@ -259,42 +283,98 @@ const PostPage = () => {
             {post.comments.map((comment, index) => (
               <div key={index} className='rounded border p-4'>
                 <div className='flex items-start justify-between'>
-                  <div>
-                    <p>{comment.content}</p>
-                    <div className='mt-2 text-sm text-gray-500'>
-                      By {comment.author.username}
+                  {editingCommentId === comment._id ? (
+                    <div className='w-full space-y-2'>
+                      <textarea
+                        value={editedCommentContent}
+                        onChange={(e) =>
+                          setEditedCommentContent(e.target.value)
+                        }
+                        className='min-h-[100px] w-full rounded border p-2'
+                      />
+                      <div className='space-x-2'>
+                        <button
+                          onClick={() => {
+                            Swal.fire({
+                              title: 'Confirm update',
+                              text: 'Are you sure you want to update this comment?',
+                              icon: 'question',
+                              showCancelButton: true,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Yes, update it!',
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                handleUpdateComment(comment._id)
+                              }
+                            })
+                          }}
+                          className='rounded bg-blue-500 px-4 py-2 text-white'
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditingCommentId(null)
+                            setEditedCommentContent('')
+                          }}
+                          className='rounded bg-gray-500 px-4 py-2 text-white'
+                        >
+                          Cancel
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div>
+                      <p>{comment.content}</p>
+                      <div className='mt-2 text-sm text-gray-500'>
+                        By {comment.author.username}
+                      </div>
+                    </div>
+                  )}
                   {(user?.id === post.author._id ||
                     user?.id === comment.author._id) && (
-                    <button
-                      onClick={() => {
-                        Swal.fire({
-                          title: 'Are you sure?',
-                          text: "You won't be able to revert this!",
-                          icon: 'warning',
-                          showCancelButton: true,
-                          confirmButtonColor: '#3085d6',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Yes, delete it!',
-                        }).then((result) => {
-                          if (result.isConfirmed) {
-                            handleDeleteComment(comment._id)
-                          }
-                        })
-                      }}
-                      className='text-red-500 hover:text-red-700'
-                    >
-                      Delete
-                    </button>
+                    <div className='space-x-2'>
+                      {user?.id === comment.author._id && !editingCommentId && (
+                        <button
+                          onClick={() => {
+                            setEditingCommentId(comment._id)
+                            setEditedCommentContent(comment.content)
+                          }}
+                          className='text-blue-500 hover:text-blue-700'
+                        >
+                          Edit
+                        </button>
+                      )}
+                      <button
+                        onClick={() => {
+                          Swal.fire({
+                            title: 'Are you sure?',
+                            text: "You won't be able to revert this!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, delete it!',
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              handleDeleteComment(comment._id)
+                            }
+                          })
+                        }}
+                        className='text-red-500 hover:text-red-700'
+                      >
+                        Delete
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
             ))}
+            {user && (
+              <CommentForm postId={postId} onCommentAdded={() => mutate()} />
+            )}
           </div>
-          {user && (
-            <CommentForm postId={postId} onCommentAdded={() => mutate()} />
-          )}
         </div>
       </article>
     </div>
@@ -302,11 +382,3 @@ const PostPage = () => {
 }
 
 export default PostPage
-
-function updatePost(
-  postId: string,
-  token: string,
-  arg2: { title: string; content: string },
-): any {
-  throw new Error('Function not implemented.')
-}
