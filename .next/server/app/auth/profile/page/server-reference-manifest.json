@@ -1,4 +1,16 @@
 {
-  "node": {},
+  "node": {
+    "7fe379e8f3f82aa9bcef5f6f0662b953a66b8bfd5d": {
+      "workers": {
+        "app/auth/profile/page": {
+          "moduleId": "[project]/.next-internal/server/app/auth/profile/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/get-user-post.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/auth/profile/page": "action-browser"
+      }
+    }
+  },
   "edge": {}
 }

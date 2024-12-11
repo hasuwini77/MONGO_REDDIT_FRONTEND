@@ -1,6 +1,7 @@
 'use client'
 
 import { Profile } from 'components/Profile'
+import UserPosts from 'components/UserPosts'
 import { useAuthentication } from 'hooks/useAuthentification'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -26,6 +27,7 @@ const MyProfile = () => {
   return (
     <div className='container mx-auto px-4 py-8'>
       <Profile user={user} onUpdateSuccess={updateUser} />
+      <UserPosts />
     </div>
   )
 }
