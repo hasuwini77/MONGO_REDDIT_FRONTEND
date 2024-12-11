@@ -80,7 +80,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2
 ;
 ;
 ;
-const MyPosts = ()=>{
+const AllPosts = ()=>{
     const { mutate, data: posts, isPending, error } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMutation"])({
         mutationFn: async ()=>{
             const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$actions$2f$get$2d$posts$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getPosts"])();
@@ -96,6 +96,34 @@ const MyPosts = ()=>{
     }, [
         mutate
     ]);
+    //VOTING FEATURE
+    const voteMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMutation"])({
+        mutationFn: async ({ postId, voteType })=>{
+            // Convert up/down to upvote/downvote to match backend expectations
+            const voteTypeForBackend = voteType === 'up' ? 'upvote' : 'downvote';
+            const response = await fetch(`/api/posts/${postId}/vote`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    voteType: voteTypeForBackend
+                })
+            });
+            if (!response.ok) {
+                throw new Error('Failed to vote');
+            }
+            return response.json();
+        },
+        onSuccess: ()=>{
+            // Refetch posts after successful vote
+            mutate();
+        },
+        onError: (error)=>{
+            console.error('Error voting:', error);
+        }
+    });
     if (isPending) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "flex items-center justify-center p-4",
@@ -104,12 +132,12 @@ const MyPosts = ()=>{
                 children: "Loading posts..."
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 34,
+                lineNumber: 69,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/page.tsx",
-            lineNumber: 33,
+            lineNumber: 68,
             columnNumber: 7
         }, this);
     }
@@ -125,12 +153,12 @@ const MyPosts = ()=>{
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 42,
+                lineNumber: 77,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/page.tsx",
-            lineNumber: 41,
+            lineNumber: 76,
             columnNumber: 7
         }, this);
     }
@@ -142,12 +170,12 @@ const MyPosts = ()=>{
                 children: "No posts found"
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 53,
+                lineNumber: 88,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/page.tsx",
-            lineNumber: 52,
+            lineNumber: 87,
             columnNumber: 7
         }, this);
     }
@@ -159,7 +187,7 @@ const MyPosts = ()=>{
                 children: "All Posts"
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 60,
+                lineNumber: 95,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -174,7 +202,7 @@ const MyPosts = ()=>{
                                     children: post.title
                                 }, void 0, false, {
                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                    lineNumber: 72,
+                                    lineNumber: 107,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -182,7 +210,7 @@ const MyPosts = ()=>{
                                     children: post.content.length > 150 ? `${post.content.substring(0, 150)}...` : post.content
                                 }, void 0, false, {
                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                    lineNumber: 77,
+                                    lineNumber: 112,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -195,7 +223,7 @@ const MyPosts = ()=>{
                                             children: post.author.username
                                         }, void 0, false, {
                                             fileName: "[project]/app/(main)/posts/page.tsx",
-                                            lineNumber: 86,
+                                            lineNumber: 121,
                                             columnNumber: 17
                                         }, this),
                                         ' ',
@@ -204,45 +232,141 @@ const MyPosts = ()=>{
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                    lineNumber: 84,
+                                    lineNumber: 119,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "mt-2 text-sm text-gray-500",
+                                    className: "mt-2 flex items-center gap-4 text-sm text-gray-500",
                                     children: [
-                                        post.comments.length,
-                                        " comment",
-                                        post.comments.length !== 1 ? 's' : ''
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex items-center gap-1",
+                                            children: [
+                                                post.comments.length,
+                                                " comment",
+                                                post.comments.length !== 1 ? 's' : ''
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/(main)/posts/page.tsx",
+                                            lineNumber: 129,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex items-center gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    onClick: (e)=>{
+                                                        e.preventDefault();
+                                                        voteMutation.mutate({
+                                                            postId: post._id,
+                                                            voteType: 'up'
+                                                        });
+                                                    },
+                                                    className: `flex items-center gap-1 ${post.userVote === 'up' ? 'text-orange-500' : 'text-gray-400'} hover:text-orange-500`,
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                        xmlns: "http://www.w3.org/2000/svg",
+                                                        className: "h-4 w-4",
+                                                        fill: "none",
+                                                        viewBox: "0 0 24 24",
+                                                        stroke: "currentColor",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                            strokeLinecap: "round",
+                                                            strokeLinejoin: "round",
+                                                            strokeWidth: 2,
+                                                            d: "M5 15l7-7 7 7"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/(main)/posts/page.tsx",
+                                                            lineNumber: 152,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/(main)/posts/page.tsx",
+                                                        lineNumber: 145,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/(main)/posts/page.tsx",
+                                                    lineNumber: 134,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "text-sm",
+                                                    children: (post.upvotes || 0) - (post.downvotes || 0)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/(main)/posts/page.tsx",
+                                                    lineNumber: 160,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    onClick: (e)=>{
+                                                        e.preventDefault();
+                                                        voteMutation.mutate({
+                                                            postId: post._id,
+                                                            voteType: 'down'
+                                                        });
+                                                    },
+                                                    className: `flex items-center gap-1 ${post.userVote === 'down' ? 'text-blue-500' : 'text-gray-400'} hover:text-blue-500`,
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                        xmlns: "http://www.w3.org/2000/svg",
+                                                        className: "h-4 w-4",
+                                                        fill: "none",
+                                                        viewBox: "0 0 24 24",
+                                                        stroke: "currentColor",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                            strokeLinecap: "round",
+                                                            strokeLinejoin: "round",
+                                                            strokeWidth: 2,
+                                                            d: "M19 9l-7 7-7-7"
+                                                        }, void 0, false, {
+                                                            fileName: "[project]/app/(main)/posts/page.tsx",
+                                                            lineNumber: 184,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/(main)/posts/page.tsx",
+                                                        lineNumber: 177,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/(main)/posts/page.tsx",
+                                                    lineNumber: 163,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/(main)/posts/page.tsx",
+                                            lineNumber: 133,
+                                            columnNumber: 17
+                                        }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                    lineNumber: 93,
+                                    lineNumber: 128,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/(main)/posts/page.tsx",
-                            lineNumber: 70,
+                            lineNumber: 105,
                             columnNumber: 13
                         }, this)
                     }, post._id, false, {
                         fileName: "[project]/app/(main)/posts/page.tsx",
-                        lineNumber: 65,
+                        lineNumber: 100,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 63,
+                lineNumber: 98,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/(main)/posts/page.tsx",
-        lineNumber: 59,
+        lineNumber: 94,
         columnNumber: 5
     }, this);
 };
-const __TURBOPACK__default__export__ = MyPosts;
+const __TURBOPACK__default__export__ = AllPosts;
 }}),
 "[project]/app/(main)/page.tsx [app-rsc] (ecmascript, Next.js server component, client modules ssr)": ((__turbopack_context__) => {
 

@@ -1,4 +1,4 @@
-import MyPosts from 'app/(main)/posts/page'
+import AllPosts from 'app/(main)/posts/page'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 300
@@ -9,7 +9,7 @@ export default function Home() {
     <div className='main'>
       <h1 className='hidden'>REDDIT IS DA SHITTT</h1>
       <div>
-        <MyPosts />
+        <AllPosts />
       </div>
     </div>
   )

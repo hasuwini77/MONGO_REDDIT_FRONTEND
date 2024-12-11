@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { useEffect } from 'react'
 import { Post } from 'types/types'
 
-const MyPosts = () => {
+const AllPosts = () => {
   const {
     mutate,
     data: posts,
@@ -27,6 +27,41 @@ const MyPosts = () => {
   useEffect(() => {
     mutate()
   }, [mutate])
+
+  //VOTING FEATURE
+  const voteMutation = useMutation({
+    mutationFn: async ({
+      postId,
+      voteType,
+    }: {
+      postId: string
+      voteType: 'up' | 'down'
+    }) => {
+      // Convert up/down to upvote/downvote to match backend expectations
+      const voteTypeForBackend = voteType === 'up' ? 'upvote' : 'downvote'
+
+      const response = await fetch(`/api/posts/${postId}/vote`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Important for sending cookies/auth
+        body: JSON.stringify({ voteType: voteTypeForBackend }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to vote')
+      }
+      return response.json()
+    },
+    onSuccess: () => {
+      // Refetch posts after successful vote
+      mutate()
+    },
+    onError: (error) => {
+      console.error('Error voting:', error)
+    },
+  })
 
   if (isPending) {
     return (
@@ -89,10 +124,72 @@ const MyPosts = () => {
                 • {new Date(post.createdAt).toLocaleDateString()}
               </div>
 
-              {/* Comments */}
-              <div className='mt-2 text-sm text-gray-500'>
-                {post.comments.length} comment
-                {post.comments.length !== 1 ? 's' : ''}
+              {/* Comments and Votes */}
+              <div className='mt-2 flex items-center gap-4 text-sm text-gray-500'>
+                <div className='flex items-center gap-1'>
+                  {post.comments.length} comment
+                  {post.comments.length !== 1 ? 's' : ''}
+                </div>
+                <div className='flex items-center gap-2'>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      voteMutation.mutate({ postId: post._id, voteType: 'up' })
+                    }}
+                    className={`flex items-center gap-1 ${
+                      post.userVote === 'up'
+                        ? 'text-orange-500'
+                        : 'text-gray-400'
+                    } hover:text-orange-500`}
+                  >
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      className='h-4 w-4'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      stroke='currentColor'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d='M5 15l7-7 7 7'
+                      />
+                    </svg>
+                  </button>
+                  <span className='text-sm'>
+                    {(post.upvotes || 0) - (post.downvotes || 0)}
+                  </span>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      voteMutation.mutate({
+                        postId: post._id,
+                        voteType: 'down',
+                      })
+                    }}
+                    className={`flex items-center gap-1 ${
+                      post.userVote === 'down'
+                        ? 'text-blue-500'
+                        : 'text-gray-400'
+                    } hover:text-blue-500`}
+                  >
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      className='h-4 w-4'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      stroke='currentColor'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d='M19 9l-7 7-7-7'
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </article>
           </Link>
@@ -101,5 +198,4 @@ const MyPosts = () => {
     </div>
   )
 }
-
-export default MyPosts
+export default AllPosts
