@@ -242,7 +242,10 @@ const handleServerActionError = (response)=>{
         throw new Error(response.error);
     }
     if ('token' in response) {
-        return response.token;
+        return response.user;
+    }
+    if ('refreshToken' in response) {
+        return response.user;
     }
     return response.data;
 };

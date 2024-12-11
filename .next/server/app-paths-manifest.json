@@ -6,5 +6,6 @@
   "/(main)/create-post/page": "app/(main)/create-post/page.js",
   "/(main)/profile/page": "app/(main)/profile/page.js",
   "/_not-found/page": "app/_not-found/page.js",
-  "/auth/profile/page": "app/auth/profile/page.js"
+  "/auth/profile/page": "app/auth/profile/page.js",
+  "/auth/sign-up/page": "app/auth/sign-up/page.js"
 }

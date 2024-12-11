@@ -151,11 +151,7 @@ const PostPage = () => {
     }
   }, [mutate, postId])
 
-  useEffect(() => {
-    console.log('Current user ID:', user?.id)
-    console.log('Post author ID:', post?.author._id)
-    console.log('Are they equal?', user?.id === post?.author._id)
-  }, [user, post])
+  useEffect(() => {}, [user, post])
 
   if ((loading && user) || (loading && !user)) {
     // Show loader until data and user authentication are ready
