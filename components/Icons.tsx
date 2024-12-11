@@ -26,6 +26,20 @@ export const IconComponent = ({
   name: IconName
   className?: string
 }) => {
-  const Icon = VALID_ICONS[name] || VALID_ICONS['UserCircle']
+  // Validate the icon name
+  const isValidIcon = name in VALID_ICONS
+  if (!isValidIcon) {
+    console.warn(`Invalid icon name: ${name}, falling back to UserCircle`)
+  }
+
+  // Type assertion to ensure name is a valid key
+  const iconName = isValidIcon ? name : 'UserCircle'
+  const Icon = VALID_ICONS[iconName]
+
   return <Icon className={className} />
+}
+
+// Add a utility function to validate icon names
+export const isValidIconName = (name: string): name is IconName => {
+  return name in VALID_ICONS
 }

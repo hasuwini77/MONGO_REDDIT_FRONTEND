@@ -5,6 +5,16 @@ import { client } from 'lib/client'
 import { useRouter } from 'next/navigation'
 import { User } from 'types/types'
 
+type LoginParams = {
+  token: string
+  refreshToken: string
+  user?: {
+    id: string
+    username: string
+    iconName: string
+  }
+}
+
 export function useAuthentication() {
   const [user, setUser] = useState<User | null>(() => {
     if (typeof window !== 'undefined') {
@@ -45,18 +55,16 @@ export function useAuthentication() {
 
   const refreshToken = async () => {
     try {
-      const storedRefreshToken = localStorage.getItem('refreshToken') // Get stored refresh token
+      const storedRefreshToken = localStorage.getItem('refreshToken')
 
       const response = await client.post('/auth/refresh-token', {
-        refreshToken: storedRefreshToken, // Send it in the request
+        refreshToken: storedRefreshToken,
       })
 
       const newToken = response.data.token
-      // Store both tokens
       localStorage.setItem('token', newToken)
-      localStorage.setItem('refreshToken', response.data.refreshToken) // Store new refresh token if provided
+      localStorage.setItem('refreshToken', response.data.refreshToken)
 
-      // Update authorization header
       client.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
       return newToken
     } catch (error) {
@@ -86,10 +94,7 @@ export function useAuthentication() {
 
           const userData = {
             ...response.data,
-            iconName:
-              parsedStoredData?.iconName ||
-              response.data.iconName ||
-              'UserCircle',
+            iconName: response.data.iconName || 'UserCircle',
           }
 
           setUser(userData)
@@ -102,7 +107,6 @@ export function useAuthentication() {
           if (newToken) {
             const retryResponse = await client.get('/auth/me')
             if (retryResponse.data) {
-              // Same logic for retry response
               const storedUserData = localStorage.getItem('userData')
               const parsedStoredData = storedUserData
                 ? JSON.parse(storedUserData)
@@ -110,10 +114,7 @@ export function useAuthentication() {
 
               const userData = {
                 ...retryResponse.data,
-                iconName:
-                  parsedStoredData?.iconName ||
-                  retryResponse.data.iconName ||
-                  'UserCircle',
+                iconName: retryResponse.data.iconName || 'UserCircle',
               }
 
               setUser(userData)
@@ -182,17 +183,24 @@ export function useAuthentication() {
     checkAuth()
   }, [])
 
-  const login = async (token: string, refreshToken: string) => {
+  const login = async ({ token, refreshToken, user }: LoginParams) => {
+    // Store tokens and user data
     localStorage.setItem('token', token)
     localStorage.setItem('refreshToken', refreshToken)
+    if (user) {
+      localStorage.setItem('userData', JSON.stringify(user))
+    }
 
+    // Set authorization header
     client.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
+    // Check authentication
     await checkAuth()
   }
 
   const logout = async () => {
     localStorage.removeItem('token')
+    localStorage.removeItem('refreshToken')
     localStorage.removeItem('userData')
     delete client.defaults.headers.common['Authorization']
     setUser(null)
@@ -204,7 +212,6 @@ export function useAuthentication() {
     setUser(updatedUser)
     setIsAuthenticated(true)
     localStorage.setItem('userData', JSON.stringify(updatedUser))
-    // Dispatch event to notify other components
     window.dispatchEvent(
       new CustomEvent('user-updated', { detail: updatedUser }),
     )

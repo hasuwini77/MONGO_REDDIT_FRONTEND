@@ -11,6 +11,16 @@ import { logInSchema, LogInValues } from 'lib/schemas'
 import { FieldError } from 'components/field-error'
 import { useAuthentication } from 'hooks/useAuthentification'
 
+type LoginResponse = {
+  token: string
+  refreshToken: string
+  user: {
+    id: string
+    username: string
+    iconName: string
+  }
+}
+
 export const LogInForm = () => {
   const { login } = useAuthentication()
   const router = useRouter()
@@ -33,11 +43,16 @@ export const LogInForm = () => {
         throw new Error(response.error)
       }
 
-      return response
+      return response as LoginResponse
     },
     onSuccess: async (response) => {
       if ('token' in response) {
-        await login(response.token)
+        // Pass both tokens and user data to the login function
+        await login({
+          token: response.token,
+          refreshToken: response.refreshToken,
+          user: response.user,
+        })
         toast.success('Logged in successfully')
         router.push('/')
       }

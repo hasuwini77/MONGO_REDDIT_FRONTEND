@@ -245,17 +245,13 @@ function useAuthentication() {
     ]);
     const refreshToken = async ()=>{
         try {
-            const storedRefreshToken = localStorage.getItem('refreshToken') // Get stored refresh token
-            ;
+            const storedRefreshToken = localStorage.getItem('refreshToken');
             const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].post('/auth/refresh-token', {
                 refreshToken: storedRefreshToken
             });
             const newToken = response.data.token;
-            // Store both tokens
             localStorage.setItem('token', newToken);
-            localStorage.setItem('refreshToken', response.data.refreshToken) // Store new refresh token if provided
-            ;
-            // Update authorization header
+            localStorage.setItem('refreshToken', response.data.refreshToken);
             __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
             return newToken;
         } catch (error) {
@@ -279,7 +275,7 @@ function useAuthentication() {
                     const parsedStoredData = storedUserData ? JSON.parse(storedUserData) : null;
                     const userData = {
                         ...response.data,
-                        iconName: parsedStoredData?.iconName || response.data.iconName || 'UserCircle'
+                        iconName: response.data.iconName || 'UserCircle'
                     };
                     setUser(userData);
                     localStorage.setItem('userData', JSON.stringify(userData));
@@ -291,12 +287,11 @@ function useAuthentication() {
                     if (newToken) {
                         const retryResponse = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].get('/auth/me');
                         if (retryResponse.data) {
-                            // Same logic for retry response
                             const storedUserData = localStorage.getItem('userData');
                             const parsedStoredData = storedUserData ? JSON.parse(storedUserData) : null;
                             const userData = {
                                 ...retryResponse.data,
-                                iconName: parsedStoredData?.iconName || retryResponse.data.iconName || 'UserCircle'
+                                iconName: retryResponse.data.iconName || 'UserCircle'
                             };
                             setUser(userData);
                             localStorage.setItem('userData', JSON.stringify(userData));
@@ -355,14 +350,21 @@ function useAuthentication() {
         }
         checkAuth();
     }, []);
-    const login = async (token, refreshToken)=>{
+    const login = async ({ token, refreshToken, user })=>{
+        // Store tokens and user data
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
+        if (user) {
+            localStorage.setItem('userData', JSON.stringify(user));
+        }
+        // Set authorization header
         __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        // Check authentication
         await checkAuth();
     };
     const logout = async ()=>{
         localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
         localStorage.removeItem('userData');
         delete __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'];
         setUser(null);
@@ -373,7 +375,6 @@ function useAuthentication() {
         setUser(updatedUser);
         setIsAuthenticated(true);
         localStorage.setItem('userData', JSON.stringify(updatedUser));
-        // Dispatch event to notify other components
         window.dispatchEvent(new CustomEvent('user-updated', {
             detail: updatedUser
         }));
@@ -437,7 +438,12 @@ const LogInForm = ()=>{
         },
         onSuccess: async (response)=>{
             if ('token' in response) {
-                await login(response.token);
+                // Pass both tokens and user data to the login function
+                await login({
+                    token: response.token,
+                    refreshToken: response.refreshToken,
+                    user: response.user
+                });
                 __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].success('Logged in successfully');
                 router.push('/');
             }
@@ -458,14 +464,14 @@ const LogInForm = ()=>{
                 disabled: isSubmitting
             }, void 0, false, {
                 fileName: "[project]/app/auth/log-in/form.tsx",
-                lineNumber: 55,
+                lineNumber: 70,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$field$2d$error$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FieldError"], {
                 error: errors.username
             }, void 0, false, {
                 fileName: "[project]/app/auth/log-in/form.tsx",
-                lineNumber: 62,
+                lineNumber: 77,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -476,14 +482,14 @@ const LogInForm = ()=>{
                 disabled: isSubmitting
             }, void 0, false, {
                 fileName: "[project]/app/auth/log-in/form.tsx",
-                lineNumber: 63,
+                lineNumber: 78,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$field$2d$error$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FieldError"], {
                 error: errors.password
             }, void 0, false, {
                 fileName: "[project]/app/auth/log-in/form.tsx",
-                lineNumber: 70,
+                lineNumber: 85,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -498,31 +504,31 @@ const LogInForm = ()=>{
                             color: "#ffffff"
                         }, void 0, false, {
                             fileName: "[project]/app/auth/log-in/form.tsx",
-                            lineNumber: 78,
+                            lineNumber: 93,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                             children: "Logging in..."
                         }, void 0, false, {
                             fileName: "[project]/app/auth/log-in/form.tsx",
-                            lineNumber: 79,
+                            lineNumber: 94,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/auth/log-in/form.tsx",
-                    lineNumber: 77,
+                    lineNumber: 92,
                     columnNumber: 11
                 }, this) : 'Log in'
             }, void 0, false, {
                 fileName: "[project]/app/auth/log-in/form.tsx",
-                lineNumber: 71,
+                lineNumber: 86,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/auth/log-in/form.tsx",
-        lineNumber: 51,
+        lineNumber: 66,
         columnNumber: 5
     }, this);
 };

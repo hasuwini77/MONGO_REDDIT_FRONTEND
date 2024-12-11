@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthentication } from 'hooks/useAuthentification'
-import { IconComponent } from './Icons'
+import { IconComponent, isValidIconName } from './Icons'
 import { useEffect, useState } from 'react'
 
 export const Header = () => {
@@ -28,9 +28,12 @@ export const Header = () => {
         <Link href='/auth/profile'>
           <div className='flex items-center gap-2'>
             <IconComponent
-              name={user.iconName || 'UserCircle'}
+              name={
+                isValidIconName(user.iconName) ? user.iconName : 'UserCircle'
+              }
               className='h-8 w-8 text-white md:h-10 md:w-10'
             />
+
             <span className='text-sm font-semibold text-white md:text-lg'>
               {user.username}
             </span>
