@@ -1,6 +1,9 @@
 import { IconName } from 'components/Icons'
 
 export interface Post {
+  userVote: string
+  upvotes: number
+  downvotes: number
   _id: string
   title: string
   content: string

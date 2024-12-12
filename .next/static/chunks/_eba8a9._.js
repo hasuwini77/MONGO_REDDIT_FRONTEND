@@ -156,6 +156,13 @@ var _s = __turbopack_refresh__.signature();
 ;
 ;
 ;
+// Create a variable outside the hook to track refresh state
+let isRefreshingToken = false;
+let refreshSubscribers = [];
+const onRefreshed = (token)=>{
+    refreshSubscribers.forEach((callback)=>callback(token));
+    refreshSubscribers = [];
+};
 function useAuthentication() {
     _s();
     const [user, setUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
@@ -170,12 +177,10 @@ function useAuthentication() {
     const [isAuthenticated, setIsAuthenticated] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(!!user);
     const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
     const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
-    // Listen for user update events
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "useAuthentication.useEffect": ()=>{
             const handleUserUpdate = {
                 "useAuthentication.useEffect.handleUserUpdate": (event)=>{
-                    //adding fake delay
                     setTimeout({
                         "useAuthentication.useEffect.handleUserUpdate": ()=>{
                             setUser(event.detail);
@@ -203,38 +208,32 @@ function useAuthentication() {
     ]);
     const refreshToken = async ()=>{
         try {
+            if (isRefreshingToken) {
+                // Return a promise that resolves when the token is refreshed
+                return new Promise((resolve)=>{
+                    refreshSubscribers.push(resolve);
+                });
+            }
+            isRefreshingToken = true;
             const storedRefreshToken = localStorage.getItem('refreshToken');
-            // Add validation to prevent requests with no refresh token
             if (!storedRefreshToken) {
                 throw new Error('No refresh token available');
             }
-            // Add flag to track refresh attempts
-            const isRefreshing = localStorage.getItem('isRefreshing');
-            if (isRefreshing === 'true') {
-                throw new Error('Token refresh already in progress');
-            }
-            try {
-                localStorage.setItem('isRefreshing', 'true');
-                const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].post('/auth/refresh-token', {
-                    refreshToken: storedRefreshToken
-                });
-                const newToken = response.data.token;
-                localStorage.setItem('token', newToken);
-                localStorage.setItem('refreshToken', response.data.refreshToken);
-                __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-                return newToken;
-            } finally{
-                // Always clear the refreshing flag
-                localStorage.removeItem('isRefreshing');
-            }
+            const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].post('/auth/refresh-token', {
+                refreshToken: storedRefreshToken
+            });
+            const newToken = response.data.token;
+            localStorage.setItem('token', newToken);
+            localStorage.setItem('refreshToken', response.data.refreshToken);
+            __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+            onRefreshed(newToken);
+            return newToken;
         } catch (error) {
             console.error('Token refresh failed:', error);
-            // Clear all auth-related storage
-            localStorage.removeItem('token');
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('isRefreshing');
             await logout();
             return null;
+        } finally{
+            isRefreshingToken = false;
         }
     };
     const checkAuth = async ()=>{
@@ -248,8 +247,6 @@ function useAuthentication() {
             try {
                 const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].get('/auth/me');
                 if (response.data) {
-                    const storedUserData = localStorage.getItem('userData');
-                    const parsedStoredData = storedUserData ? JSON.parse(storedUserData) : null;
                     const userData = {
                         ...response.data,
                         iconName: response.data.iconName || 'UserCircle'
@@ -262,35 +259,19 @@ function useAuthentication() {
                 if (error?.response?.status === 401) {
                     const newToken = await refreshToken();
                     if (newToken) {
-                        const retryResponse = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].get('/auth/me');
-                        if (retryResponse.data) {
-                            const storedUserData = localStorage.getItem('userData');
-                            const parsedStoredData = storedUserData ? JSON.parse(storedUserData) : null;
-                            const userData = {
-                                ...retryResponse.data,
-                                iconName: retryResponse.data.iconName || 'UserCircle'
-                            };
-                            setUser(userData);
-                            localStorage.setItem('userData', JSON.stringify(userData));
-                            setIsAuthenticated(true);
-                        }
+                        return checkAuth() // Retry the auth check with new token
+                        ;
                     }
-                } else {
-                    throw error;
                 }
+                throw error;
             }
         } catch (error) {
             console.error('Auth check error:', error);
-            localStorage.removeItem('token');
-            localStorage.removeItem('userData');
-            delete __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'];
-            setUser(null);
-            setIsAuthenticated(false);
+            await logout();
         } finally{
             setIsLoading(false);
         }
     };
-    // Set up an axios interceptor to handle token refresh
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "useAuthentication.useEffect": ()=>{
             const interceptor = __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].interceptors.response.use({
@@ -320,33 +301,18 @@ function useAuthentication() {
             })["useAuthentication.useEffect"];
         }
     }["useAuthentication.useEffect"], []);
-    // Initialize user from localStorage
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "useAuthentication.useEffect": ()=>{
-            const storedUserData = localStorage.getItem('userData');
-            if (storedUserData) {
-                try {
-                    const parsedUserData = JSON.parse(storedUserData);
-                    setUser(parsedUserData);
-                    setIsAuthenticated(true);
-                } catch (error) {
-                    console.error('Error parsing stored user data:', error);
-                    localStorage.removeItem('userData');
-                }
-            }
             checkAuth();
         }
     }["useAuthentication.useEffect"], []);
     const login = async ({ token, refreshToken, user })=>{
-        // Store tokens and user data
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
         if (user) {
             localStorage.setItem('userData', JSON.stringify(user));
         }
-        // Set authorization header
         __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        // Check authentication
         await checkAuth();
     };
     const logout = async ()=>{

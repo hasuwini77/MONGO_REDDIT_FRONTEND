@@ -15,6 +15,15 @@ type LoginParams = {
   }
 }
 
+// Create a variable outside the hook to track refresh state
+let isRefreshingToken = false
+let refreshSubscribers: ((token: string) => void)[] = []
+
+const onRefreshed = (token: string) => {
+  refreshSubscribers.forEach((callback) => callback(token))
+  refreshSubscribers = []
+}
+
 export function useAuthentication() {
   const [user, setUser] = useState<User | null>(() => {
     if (typeof window !== 'undefined') {
@@ -27,14 +36,11 @@ export function useAuthentication() {
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
 
-  // Listen for user update events
   useEffect(() => {
     const handleUserUpdate = (event: CustomEvent<User>) => {
-      //adding fake delay
       setTimeout(() => {
         setUser(event.detail)
       }, 700)
-
       setIsAuthenticated(true)
     }
 
@@ -55,44 +61,37 @@ export function useAuthentication() {
 
   const refreshToken = async () => {
     try {
+      if (isRefreshingToken) {
+        // Return a promise that resolves when the token is refreshed
+        return new Promise((resolve) => {
+          refreshSubscribers.push(resolve)
+        })
+      }
+
+      isRefreshingToken = true
       const storedRefreshToken = localStorage.getItem('refreshToken')
 
-      // Add validation to prevent requests with no refresh token
       if (!storedRefreshToken) {
         throw new Error('No refresh token available')
       }
 
-      // Add flag to track refresh attempts
-      const isRefreshing = localStorage.getItem('isRefreshing')
-      if (isRefreshing === 'true') {
-        throw new Error('Token refresh already in progress')
-      }
+      const response = await client.post('/auth/refresh-token', {
+        refreshToken: storedRefreshToken,
+      })
 
-      try {
-        localStorage.setItem('isRefreshing', 'true')
+      const newToken = response.data.token
+      localStorage.setItem('token', newToken)
+      localStorage.setItem('refreshToken', response.data.refreshToken)
 
-        const response = await client.post('/auth/refresh-token', {
-          refreshToken: storedRefreshToken,
-        })
-
-        const newToken = response.data.token
-        localStorage.setItem('token', newToken)
-        localStorage.setItem('refreshToken', response.data.refreshToken)
-
-        client.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
-        return newToken
-      } finally {
-        // Always clear the refreshing flag
-        localStorage.removeItem('isRefreshing')
-      }
+      client.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
+      onRefreshed(newToken)
+      return newToken
     } catch (error) {
       console.error('Token refresh failed:', error)
-      // Clear all auth-related storage
-      localStorage.removeItem('token')
-      localStorage.removeItem('refreshToken')
-      localStorage.removeItem('isRefreshing')
       await logout()
       return null
+    } finally {
+      isRefreshingToken = false
     }
   }
 
@@ -109,11 +108,6 @@ export function useAuthentication() {
       try {
         const response = await client.get('/auth/me')
         if (response.data) {
-          const storedUserData = localStorage.getItem('userData')
-          const parsedStoredData = storedUserData
-            ? JSON.parse(storedUserData)
-            : null
-
           const userData = {
             ...response.data,
             iconName: response.data.iconName || 'UserCircle',
@@ -127,40 +121,19 @@ export function useAuthentication() {
         if (error?.response?.status === 401) {
           const newToken = await refreshToken()
           if (newToken) {
-            const retryResponse = await client.get('/auth/me')
-            if (retryResponse.data) {
-              const storedUserData = localStorage.getItem('userData')
-              const parsedStoredData = storedUserData
-                ? JSON.parse(storedUserData)
-                : null
-
-              const userData = {
-                ...retryResponse.data,
-                iconName: retryResponse.data.iconName || 'UserCircle',
-              }
-
-              setUser(userData)
-              localStorage.setItem('userData', JSON.stringify(userData))
-              setIsAuthenticated(true)
-            }
+            return checkAuth() // Retry the auth check with new token
           }
-        } else {
-          throw error
         }
+        throw error
       }
     } catch (error) {
       console.error('Auth check error:', error)
-      localStorage.removeItem('token')
-      localStorage.removeItem('userData')
-      delete client.defaults.headers.common['Authorization']
-      setUser(null)
-      setIsAuthenticated(false)
+      await logout()
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Set up an axios interceptor to handle token refresh
   useEffect(() => {
     const interceptor = client.interceptors.response.use(
       (response) => response,
@@ -189,34 +162,18 @@ export function useAuthentication() {
     }
   }, [])
 
-  // Initialize user from localStorage
   useEffect(() => {
-    const storedUserData = localStorage.getItem('userData')
-    if (storedUserData) {
-      try {
-        const parsedUserData = JSON.parse(storedUserData)
-        setUser(parsedUserData)
-        setIsAuthenticated(true)
-      } catch (error) {
-        console.error('Error parsing stored user data:', error)
-        localStorage.removeItem('userData')
-      }
-    }
     checkAuth()
   }, [])
 
   const login = async ({ token, refreshToken, user }: LoginParams) => {
-    // Store tokens and user data
     localStorage.setItem('token', token)
     localStorage.setItem('refreshToken', refreshToken)
     if (user) {
       localStorage.setItem('userData', JSON.stringify(user))
     }
 
-    // Set authorization header
     client.defaults.headers.common['Authorization'] = `Bearer ${token}`
-
-    // Check authentication
     await checkAuth()
   }
 
