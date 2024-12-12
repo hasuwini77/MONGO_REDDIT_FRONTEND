@@ -562,6 +562,10 @@ img, video {
   margin-right: 1rem;
 }
 
+.ml-2 {
+  margin-left: .5rem;
+}
+
 .block {
   display: block;
 }
@@ -656,6 +660,10 @@ img, video {
 
 .min-w-\[40px\] {
   min-width: 40px;
+}
+
+.min-w-\[20px\] {
+  min-width: 20px;
 }
 
 .max-w-2xl {

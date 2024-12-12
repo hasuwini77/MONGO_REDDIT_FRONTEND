@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import { Toaster } from 'sonner'
 
 import './globals.css'
-import { QueryClientProvider } from 'providers/query-client-provider'
 import { cn } from 'utils/classnames'
 import { Providers } from './(main)/providers'
 
@@ -27,12 +26,10 @@ export default function RootLayout({
           'flex min-h-screen flex-col items-center bg-zinc-50 font-medium text-zinc-800',
         )}
       >
-        <QueryClientProvider>
-          <Providers>
-            {children}
-            <Toaster />
-          </Providers>
-        </QueryClientProvider>
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   )

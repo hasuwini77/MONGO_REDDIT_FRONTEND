@@ -69,9 +69,11 @@ __turbopack_esm__({
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$actions$2f$get$2d$posts$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/actions/get-posts.ts [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/lib/client.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$error$2d$handling$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/lib/error-handling.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/link.js [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/dist/server/route-modules/app-page/vendored/ssr/react.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$QueryClientProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@tanstack/react-query/build/modern/useQuery.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/@tanstack/react-query/build/modern/useMutation.js [app-ssr] (ecmascript)");
 'use client';
 ;
@@ -81,50 +83,76 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2
 ;
 ;
 const AllPosts = ()=>{
-    const { mutate, data: posts, isPending, error } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMutation"])({
-        mutationFn: async ()=>{
+    const queryClient = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$QueryClientProvider$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useQueryClient"])();
+    // Use useQuery for fetching posts
+    const { data: posts, isLoading, error } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useQuery$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useQuery"])({
+        queryKey: [
+            'posts'
+        ],
+        queryFn: async ()=>{
             const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$actions$2f$get$2d$posts$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["getPosts"])();
             return (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$error$2d$handling$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["handleServerActionError"])(result);
-        },
-        onError: (error)=>{
-            console.error('Error fetching posts:', error);
-        },
-        onSuccess: (data)=>{}
-    });
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
-        mutate();
-    }, [
-        mutate
-    ]);
-    //VOTING FEATURE
-    const voteMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMutation"])({
-        mutationFn: async ({ postId, voteType })=>{
-            // Convert up/down to upvote/downvote to match backend expectations
-            const voteTypeForBackend = voteType === 'up' ? 'upvote' : 'downvote';
-            const response = await fetch(`/api/posts/${postId}/vote`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-                    voteType: voteTypeForBackend
-                })
-            });
-            if (!response.ok) {
-                throw new Error('Failed to vote');
-            }
-            return response.json();
-        },
-        onSuccess: ()=>{
-            // Refetch posts after successful vote
-            mutate();
-        },
-        onError: (error)=>{
-            console.error('Error voting:', error);
         }
     });
-    if (isPending) {
+    const voteMutation = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$tanstack$2f$react$2d$query$2f$build$2f$modern$2f$useMutation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useMutation"])({
+        mutationFn: async ({ postId, voteType })=>{
+            const voteTypeForBackend = voteType === 'up' ? 'upvote' : 'downvote';
+            const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].post(`/posts/${postId}/vote`, {
+                voteType: voteTypeForBackend
+            });
+            return response.data;
+        },
+        onMutate: async ({ postId, voteType })=>{
+            // Cancel any outgoing refetches
+            await queryClient.cancelQueries({
+                queryKey: [
+                    'posts'
+                ]
+            });
+            // Snapshot the previous value
+            const previousPosts = queryClient.getQueryData([
+                'posts'
+            ]);
+            // Optimistically update the posts
+            queryClient.setQueryData([
+                'posts'
+            ], (old)=>{
+                if (!old) return old;
+                return old.map((post)=>{
+                    if (post._id === postId) {
+                        const isRemovingVote = post.userVote === voteType;
+                        return {
+                            ...post,
+                            upvotes: post.upvotes + (voteType === 'up' ? isRemovingVote ? -1 : 1 : post.userVote === 'up' ? -1 : 0),
+                            downvotes: post.downvotes + (voteType === 'down' ? isRemovingVote ? -1 : 1 : post.userVote === 'down' ? -1 : 0),
+                            userVote: isRemovingVote ? '' : voteType
+                        };
+                    }
+                    return post;
+                });
+            });
+            return {
+                previousPosts
+            };
+        },
+        onError: (err, variables, context)=>{
+            // If the mutation fails, roll back to the previous value
+            if (context?.previousPosts) {
+                queryClient.setQueryData([
+                    'posts'
+                ], context.previousPosts);
+            }
+        },
+        onSettled: ()=>{
+            // Refetch after error or success
+            queryClient.invalidateQueries({
+                queryKey: [
+                    'posts'
+                ]
+            });
+        }
+    });
+    if (isLoading) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "flex items-center justify-center p-4",
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -132,12 +160,12 @@ const AllPosts = ()=>{
                 children: "Loading posts..."
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 69,
+                lineNumber: 97,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/page.tsx",
-            lineNumber: 68,
+            lineNumber: 96,
             columnNumber: 7
         }, this);
     }
@@ -153,12 +181,12 @@ const AllPosts = ()=>{
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 77,
+                lineNumber: 105,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/page.tsx",
-            lineNumber: 76,
+            lineNumber: 104,
             columnNumber: 7
         }, this);
     }
@@ -170,15 +198,25 @@ const AllPosts = ()=>{
                 children: "No posts found"
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 88,
+                lineNumber: 116,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/(main)/posts/page.tsx",
-            lineNumber: 87,
+            lineNumber: 115,
             columnNumber: 7
         }, this);
     }
+    const sortedPosts = [
+        ...posts
+    ].sort((a, b)=>{
+        const scoreA = a.upvotes - a.downvotes;
+        const scoreB = b.upvotes - b.downvotes;
+        if (scoreB !== scoreA) {
+            return scoreB - scoreA;
+        }
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "mx-auto max-w-7xl p-4",
         children: [
@@ -187,14 +225,19 @@ const AllPosts = ()=>{
                 children: "All Posts"
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 95,
+                lineNumber: 132,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "space-y-6",
-                children: posts.map((post)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
+                children: sortedPosts.map((post)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$link$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                         href: `/posts/${post._id}`,
                         className: "block rounded-lg border border-gray-200 bg-white p-6 shadow-md transition-all duration-300 ease-in-out hover:shadow-[0_0_10px_5px_rgba(75,0,130,0.2),0_0_10px_10px_rgba(128,0,128,0.2)]",
+                        onClick: (e)=>{
+                            if (e.target.closest('button')) {
+                                e.preventDefault();
+                            }
+                        },
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("article", {
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -202,7 +245,7 @@ const AllPosts = ()=>{
                                     children: post.title
                                 }, void 0, false, {
                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                    lineNumber: 107,
+                                    lineNumber: 148,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -210,7 +253,7 @@ const AllPosts = ()=>{
                                     children: post.content.length > 150 ? `${post.content.substring(0, 150)}...` : post.content
                                 }, void 0, false, {
                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                    lineNumber: 112,
+                                    lineNumber: 152,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -223,7 +266,7 @@ const AllPosts = ()=>{
                                             children: post.author.username
                                         }, void 0, false, {
                                             fileName: "[project]/app/(main)/posts/page.tsx",
-                                            lineNumber: 121,
+                                            lineNumber: 160,
                                             columnNumber: 17
                                         }, this),
                                         ' ',
@@ -232,7 +275,7 @@ const AllPosts = ()=>{
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                    lineNumber: 119,
+                                    lineNumber: 158,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -247,122 +290,148 @@ const AllPosts = ()=>{
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/(main)/posts/page.tsx",
-                                            lineNumber: 129,
+                                            lineNumber: 167,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "flex items-center gap-2",
+                                            className: "flex items-center gap-1",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                     onClick: (e)=>{
                                                         e.preventDefault();
+                                                        e.stopPropagation();
                                                         voteMutation.mutate({
                                                             postId: post._id,
                                                             voteType: 'up'
                                                         });
                                                     },
-                                                    className: `flex items-center gap-1 ${post.userVote === 'up' ? 'text-orange-500' : 'text-gray-400'} hover:text-orange-500`,
+                                                    className: `flex items-center ${post.userVote === 'up' ? 'text-orange-500' : 'text-gray-400'} hover:text-orange-500`,
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
                                                         xmlns: "http://www.w3.org/2000/svg",
-                                                        className: "h-4 w-4",
-                                                        fill: "none",
+                                                        className: "h-6 w-6",
                                                         viewBox: "0 0 24 24",
+                                                        fill: "none",
                                                         stroke: "currentColor",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                            strokeLinecap: "round",
-                                                            strokeLinejoin: "round",
-                                                            strokeWidth: 2,
-                                                            d: "M5 15l7-7 7 7"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/(main)/posts/page.tsx",
-                                                            lineNumber: 152,
-                                                            columnNumber: 23
-                                                        }, this)
-                                                    }, void 0, false, {
+                                                        strokeWidth: "2",
+                                                        strokeLinecap: "round",
+                                                        strokeLinejoin: "round",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                                d: "M12 3l8 8H4z"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/(main)/posts/page.tsx",
+                                                                lineNumber: 194,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("line", {
+                                                                x1: "12",
+                                                                y1: "3",
+                                                                x2: "12",
+                                                                y2: "17"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/(main)/posts/page.tsx",
+                                                                lineNumber: 195,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/(main)/posts/page.tsx",
-                                                        lineNumber: 145,
+                                                        lineNumber: 184,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                                    lineNumber: 134,
-                                                    columnNumber: 19
-                                                }, this),
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                    className: "text-sm",
-                                                    children: (post.upvotes || 0) - (post.downvotes || 0)
-                                                }, void 0, false, {
-                                                    fileName: "[project]/app/(main)/posts/page.tsx",
-                                                    lineNumber: 160,
+                                                    lineNumber: 172,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                                     onClick: (e)=>{
                                                         e.preventDefault();
+                                                        e.stopPropagation();
                                                         voteMutation.mutate({
                                                             postId: post._id,
                                                             voteType: 'down'
                                                         });
                                                     },
-                                                    className: `flex items-center gap-1 ${post.userVote === 'down' ? 'text-blue-500' : 'text-gray-400'} hover:text-blue-500`,
+                                                    className: `flex items-center ${post.userVote === 'down' ? 'text-blue-500' : 'text-gray-400'} hover:text-blue-500`,
                                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
                                                         xmlns: "http://www.w3.org/2000/svg",
-                                                        className: "h-4 w-4",
-                                                        fill: "none",
+                                                        className: "h-6 w-6",
                                                         viewBox: "0 0 24 24",
+                                                        fill: "none",
                                                         stroke: "currentColor",
-                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                            strokeLinecap: "round",
-                                                            strokeLinejoin: "round",
-                                                            strokeWidth: 2,
-                                                            d: "M19 9l-7 7-7-7"
-                                                        }, void 0, false, {
-                                                            fileName: "[project]/app/(main)/posts/page.tsx",
-                                                            lineNumber: 184,
-                                                            columnNumber: 23
-                                                        }, this)
-                                                    }, void 0, false, {
+                                                        strokeWidth: "2",
+                                                        strokeLinecap: "round",
+                                                        strokeLinejoin: "round",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                                d: "M12 21l-8-8h16z"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/(main)/posts/page.tsx",
+                                                                lineNumber: 223,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("line", {
+                                                                x1: "12",
+                                                                y1: "21",
+                                                                x2: "12",
+                                                                y2: "7"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/app/(main)/posts/page.tsx",
+                                                                lineNumber: 224,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/app/(main)/posts/page.tsx",
-                                                        lineNumber: 177,
+                                                        lineNumber: 213,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                                    lineNumber: 163,
+                                                    lineNumber: 198,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "ml-2 min-w-[20px] text-center text-sm font-medium",
+                                                    children: post.upvotes - post.downvotes
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/(main)/posts/page.tsx",
+                                                    lineNumber: 227,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/(main)/posts/page.tsx",
-                                            lineNumber: 133,
+                                            lineNumber: 171,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/(main)/posts/page.tsx",
-                                    lineNumber: 128,
+                                    lineNumber: 166,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/(main)/posts/page.tsx",
-                            lineNumber: 105,
+                            lineNumber: 147,
                             columnNumber: 13
                         }, this)
                     }, post._id, false, {
                         fileName: "[project]/app/(main)/posts/page.tsx",
-                        lineNumber: 100,
+                        lineNumber: 137,
                         columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/app/(main)/posts/page.tsx",
-                lineNumber: 98,
+                lineNumber: 135,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/(main)/posts/page.tsx",
-        lineNumber: 94,
+        lineNumber: 131,
         columnNumber: 5
     }, this);
 };
