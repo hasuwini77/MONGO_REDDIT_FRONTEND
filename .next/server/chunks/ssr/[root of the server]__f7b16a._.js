@@ -164,10 +164,7 @@ const getPost = async (id)=>{
         };
     }
     try {
-        console.log('Server Action: Fetching post with ID:', id);
         const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["client"].get(`/posts/${id}`);
-        console.log('Server Action: API response:', response.data) // Debug log
-        ;
         return {
             data: response.data
         };

@@ -630,6 +630,10 @@ img, video {
   min-height: 100px;
 }
 
+.min-h-\[80px\] {
+  min-height: 80px;
+}
+
 .w-5 {
   width: 1.25rem;
 }
@@ -990,6 +994,10 @@ img, video {
 
 .pt-6 {
   padding-top: 1.5rem;
+}
+
+.pt-4 {
+  padding-top: 1rem;
 }
 
 .text-center {
