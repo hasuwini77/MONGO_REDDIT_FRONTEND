@@ -293,16 +293,35 @@ function useAuthentication() {
     const refreshToken = async ()=>{
         try {
             const storedRefreshToken = localStorage.getItem('refreshToken');
-            const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].post('/auth/refresh-token', {
-                refreshToken: storedRefreshToken
-            });
-            const newToken = response.data.token;
-            localStorage.setItem('token', newToken);
-            localStorage.setItem('refreshToken', response.data.refreshToken);
-            __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
-            return newToken;
+            // Add validation to prevent requests with no refresh token
+            if (!storedRefreshToken) {
+                throw new Error('No refresh token available');
+            }
+            // Add flag to track refresh attempts
+            const isRefreshing = localStorage.getItem('isRefreshing');
+            if (isRefreshing === 'true') {
+                throw new Error('Token refresh already in progress');
+            }
+            try {
+                localStorage.setItem('isRefreshing', 'true');
+                const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].post('/auth/refresh-token', {
+                    refreshToken: storedRefreshToken
+                });
+                const newToken = response.data.token;
+                localStorage.setItem('token', newToken);
+                localStorage.setItem('refreshToken', response.data.refreshToken);
+                __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+                return newToken;
+            } finally{
+                // Always clear the refreshing flag
+                localStorage.removeItem('isRefreshing');
+            }
         } catch (error) {
             console.error('Token refresh failed:', error);
+            // Clear all auth-related storage
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('isRefreshing');
             await logout();
             return null;
         }

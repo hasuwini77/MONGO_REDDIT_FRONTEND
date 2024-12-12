@@ -57,18 +57,40 @@ export function useAuthentication() {
     try {
       const storedRefreshToken = localStorage.getItem('refreshToken')
 
-      const response = await client.post('/auth/refresh-token', {
-        refreshToken: storedRefreshToken,
-      })
+      // Add validation to prevent requests with no refresh token
+      if (!storedRefreshToken) {
+        throw new Error('No refresh token available')
+      }
 
-      const newToken = response.data.token
-      localStorage.setItem('token', newToken)
-      localStorage.setItem('refreshToken', response.data.refreshToken)
+      // Add flag to track refresh attempts
+      const isRefreshing = localStorage.getItem('isRefreshing')
+      if (isRefreshing === 'true') {
+        throw new Error('Token refresh already in progress')
+      }
 
-      client.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
-      return newToken
+      try {
+        localStorage.setItem('isRefreshing', 'true')
+
+        const response = await client.post('/auth/refresh-token', {
+          refreshToken: storedRefreshToken,
+        })
+
+        const newToken = response.data.token
+        localStorage.setItem('token', newToken)
+        localStorage.setItem('refreshToken', response.data.refreshToken)
+
+        client.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
+        return newToken
+      } finally {
+        // Always clear the refreshing flag
+        localStorage.removeItem('isRefreshing')
+      }
     } catch (error) {
       console.error('Token refresh failed:', error)
+      // Clear all auth-related storage
+      localStorage.removeItem('token')
+      localStorage.removeItem('refreshToken')
+      localStorage.removeItem('isRefreshing')
       await logout()
       return null
     }
