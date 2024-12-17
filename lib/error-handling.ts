@@ -3,7 +3,7 @@ import { isAxiosError } from 'axios'
 import { isRedirectError } from 'next/dist/client/components/redirect'
 import { toast } from 'sonner'
 
-export type ServerActionResponse<T = any> =
+export type ServerActionResponse<T = unknown> =
   | { data: T; error?: never } // Success with data
   | { token: string; user: T; error?: never } // Success with token and user
   | { refreshToken: string; user: T; error?: never } // RefreshToken? with token and user
