@@ -1,31 +1,6 @@
 {
-  "app": {
-    "[project]/app/(main)/page": [
-      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
-    ],
-    "[project]/app/(main)/posts/[id]/page": [
-      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
-    ],
-    "[project]/app/auth/log-in/page": [
-      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
-    ],
-    "[project]/app/(main)/create-post/page": [
-      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
-    ],
-    "[project]/app/(main)/profile/page": [
-      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
-    ],
-    "[project]/app/_not-found/page": [
-      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
-    ],
-    "[project]/app/auth/profile/page": [
-      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
-    ],
-    "[project]/app/auth/sign-up/page": [
-      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
-    ]
-  },
-  "appUsingSizeAdjust": true,
+  "app": {},
+  "appUsingSizeAdjust": false,
   "pages": {},
   "pagesUsingSizeAdjust": false
 }
