@@ -3,14 +3,6 @@ import { VALID_ICONS } from './Icons'
 
 import type { IconName } from './Icons'
 
-const icons = {
-  UserCircle,
-  User,
-  UserCog,
-  UserCircle2,
-  Ghost,
-}
-
 interface IconSelectorProps {
   selected: IconName
   onChange: (iconName: IconName) => void

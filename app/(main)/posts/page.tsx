@@ -7,8 +7,6 @@ import { handleServerActionError } from 'lib/error-handling'
 import Link from 'next/link'
 import { Post } from 'types/types'
 
-type VoteType = '' | 'up' | 'down'
-
 const AllPosts = () => {
   const queryClient = useQueryClient()
 

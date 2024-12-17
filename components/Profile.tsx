@@ -10,10 +10,9 @@ import { useRouter } from 'next/navigation'
 
 interface ProfileProps {
   user: User
-  onUpdateSuccess: (updatedUser: User) => void
 }
 
-export const Profile = ({ user, onUpdateSuccess }: ProfileProps) => {
+export const Profile = ({ user }: ProfileProps) => {
   const [username, setUsername] = useState(user.username)
   const [selectedIcon, setSelectedIcon] = useState<IconName>('UserCircle')
   const [message, setMessage] = useState('')

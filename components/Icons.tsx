@@ -1,13 +1,5 @@
-// components/Icons.tsx
 'use client'
-import {
-  UserCircle,
-  User,
-  UserCog,
-  UserCircle2,
-  Ghost,
-  LucideIcon,
-} from 'lucide-react'
+import { UserCircle, User, UserCog, UserCircle2, Ghost } from 'lucide-react'
 
 export const VALID_ICONS = {
   UserCircle,

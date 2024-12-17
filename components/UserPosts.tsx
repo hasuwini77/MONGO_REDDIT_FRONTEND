@@ -56,7 +56,7 @@ const UserPosts = () => {
     return (
       <div className='flex items-center justify-center p-4'>
         <div className='text-red-500'>
-          Error loading your posts:{' '}
+          Error loading your posts:
           {error instanceof Error ? error.message : 'Unknown error'}
         </div>
       </div>
@@ -66,7 +66,7 @@ const UserPosts = () => {
   if (!posts || posts.length === 0) {
     return (
       <div className='rounded-lg bg-white py-8 text-center shadow'>
-        <p className='text-gray-500'>You haven't created any posts yet.</p>
+        <p className='text-gray-500'>You haven&apos;t created any posts yet.</p>
         <button
           onClick={() => router.push('/create-post')}
           className='mt-4 rounded-lg bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600'

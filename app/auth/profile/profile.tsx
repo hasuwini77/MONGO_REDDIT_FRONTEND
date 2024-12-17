@@ -26,7 +26,7 @@ const MyProfile = () => {
 
   return (
     <div className='container mx-auto px-4 py-8'>
-      <Profile user={user} onUpdateSuccess={updateUser} />
+      <Profile user={user} />
       <UserPosts />
     </div>
   )
