@@ -3,7 +3,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { toastServerError, ServerActionResponse } from 'lib/error-handling'
+import { toastServerError } from 'lib/error-handling'
 import { signUp } from 'actions/sign-up'
 import { signUpSchema, SignUpValues } from 'lib/schemas'
 import { FieldError } from 'components/field-error'
