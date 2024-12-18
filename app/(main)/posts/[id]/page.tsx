@@ -48,10 +48,6 @@ const PostPage = () => {
   const [editedCommentContent, setEditedCommentContent] = useState('')
   const [loading, setLoading] = useState(true)
 
-  if (!postId) {
-    return <div>Invalid post ID</div>
-  }
-
   const {
     mutate,
     data: post,
@@ -152,6 +148,10 @@ const PostPage = () => {
   }, [mutate, postId])
 
   useEffect(() => {}, [user, post])
+
+  if (!postId) {
+    return <div>Invalid post ID</div>
+  }
 
   if ((loading && user) || (loading && !user)) {
     // Show loader until data and user authentication are ready
