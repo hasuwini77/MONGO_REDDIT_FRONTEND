@@ -11,6 +11,16 @@ import { useAuthentication } from 'hooks/useAuthentification'
 import { useRouter } from 'next/navigation'
 import HashLoader from 'react-spinners/HashLoader'
 
+interface SignUpResponse {
+  token: string
+  refreshToken: string
+  user?: {
+    id: string
+    username: string
+    iconName: string
+  }
+}
+
 export const SignUpForm = () => {
   const { login } = useAuthentication()
   const router = useRouter()
@@ -21,17 +31,24 @@ export const SignUpForm = () => {
       if ('error' in response) {
         throw new Error(response.error)
       }
-      return response as Extract<ServerActionResponse, { token: string }>
+      return response as SignUpResponse
     },
-    onSuccess: async (data) => {
-      if ('token' in data) {
-        await login(data.token)
-        router.push('/')
-      }
+    onSuccess: async (data: SignUpResponse) => {
+      await login({
+        token: data.token,
+        refreshToken: data.refreshToken,
+        user: data.user
+          ? {
+              id: data.user.id,
+              username: data.user.username,
+              iconName: data.user.iconName,
+            }
+          : undefined,
+      })
+      router.push('/')
     },
     onError: toastServerError,
   })
-
   const {
     register,
     handleSubmit,
