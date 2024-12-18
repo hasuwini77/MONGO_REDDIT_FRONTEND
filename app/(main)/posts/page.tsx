@@ -26,6 +26,9 @@ const AllPosts = () => {
         upvotes: Number(post.upvotes) || 0,
         downvotes: Number(post.downvotes) || 0,
       }))
+
+      // adding fake delay for my loader
+      await new Promise((resolve) => setTimeout(resolve, 700))
       setLocalPosts(formattedPosts)
       return formattedPosts
     },
