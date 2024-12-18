@@ -27,8 +27,13 @@ const onRefreshed = (token: string) => {
 export function useAuthentication() {
   const [user, setUser] = useState<User | null>(() => {
     if (typeof window !== 'undefined') {
-      const userData = localStorage.getItem('userData')
-      return userData ? JSON.parse(userData) : null
+      try {
+        const userData = localStorage.getItem('userData')
+        return userData ? JSON.parse(userData) : null
+      } catch (error) {
+        console.error('Error parsing user data:', error)
+        return null
+      }
     }
     return null
   })
@@ -99,12 +104,29 @@ export function useAuthentication() {
     }
   }
 
+  const isTokenExpired = (token: string): boolean => {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      return payload.exp * 1000 < Date.now()
+    } catch {
+      return true
+    }
+  }
+
   const checkAuth = async () => {
     try {
       const token = localStorage.getItem('token')
       if (!token) {
         setIsLoading(false)
         return
+      }
+
+      if (isTokenExpired(token)) {
+        const newToken = await refreshToken()
+        if (!newToken) {
+          await logout()
+          return
+        }
       }
 
       client.defaults.headers.common['Authorization'] = `Bearer ${token}`
@@ -153,7 +175,11 @@ export function useAuthentication() {
               originalRequest.headers['Authorization'] = `Bearer ${newToken}`
               return client(originalRequest)
             }
+            // If no new token, handle logout
+            await logout()
+            return Promise.reject(error)
           } catch (refreshError) {
+            await logout()
             return Promise.reject(refreshError)
           }
         }
@@ -166,28 +192,34 @@ export function useAuthentication() {
     }
   }, [])
 
-  useEffect(() => {
-    checkAuth()
-  }, [])
-
   const login = async ({ token, refreshToken, user }: LoginParams) => {
-    localStorage.setItem('token', token)
-    localStorage.setItem('refreshToken', refreshToken)
-    client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    if (!token || !refreshToken) {
+      console.error('Missing token or refresh token')
+      return
+    }
 
-    if (user) {
-      const userData: User = {
-        id: user.id,
-        username: user.username,
-        iconName: user.iconName || 'UserCircle',
-        createdAt: new Date().toISOString(), // Add these if they're not provided
-        updatedAt: new Date().toISOString(), // Add these if they're not provided
+    try {
+      localStorage.setItem('token', token)
+      localStorage.setItem('refreshToken', refreshToken)
+      client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+      if (user) {
+        const userData: User = {
+          id: user.id,
+          username: user.username,
+          iconName: user.iconName || 'UserCircle',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+        localStorage.setItem('userData', JSON.stringify(userData))
+        setUser(userData)
+        setIsAuthenticated(true)
+      } else {
+        await checkAuth()
       }
-      localStorage.setItem('userData', JSON.stringify(userData))
-      setUser(userData)
-      setIsAuthenticated(true)
-    } else {
-      await checkAuth()
+    } catch (error) {
+      console.error('Login error:', error)
+      await logout()
     }
   }
 
@@ -200,13 +232,17 @@ export function useAuthentication() {
   }, [])
 
   const logout = async () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('refreshToken')
-    localStorage.removeItem('userData')
-    delete client.defaults.headers.common['Authorization']
-    setUser(null)
-    setIsAuthenticated(false)
-    router.push('/auth/log-in')
+    try {
+      localStorage.removeItem('token')
+      localStorage.removeItem('refreshToken')
+      localStorage.removeItem('userData')
+      delete client.defaults.headers.common['Authorization']
+      setUser(null)
+      setIsAuthenticated(false)
+      router.push('/auth/log-in')
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
   }
 
   const updateUser = (updatedUser: User) => {

@@ -118,10 +118,15 @@ function useAuthentication() {
     const [user, setUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         "useAuthentication.useState": ()=>{
             if ("TURBOPACK compile-time truthy", 1) {
-                const userData = localStorage.getItem('userData');
-                return userData ? JSON.parse(userData) : null;
+                try {
+                    const userData = localStorage.getItem('userData');
+                    return userData ? JSON.parse(userData) : null;
+                } catch (error) {
+                    console.error('Error parsing user data:', error);
+                    return null;
+                }
             }
-            "TURBOPACK unreachable";
+            return null;
         }
     }["useAuthentication.useState"]);
     const [isAuthenticated, setIsAuthenticated] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(!!user);
@@ -192,12 +197,27 @@ function useAuthentication() {
             isRefreshingToken = false;
         }
     };
+    const isTokenExpired = (token)=>{
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.exp * 1000 < Date.now();
+        } catch  {
+            return true;
+        }
+    };
     const checkAuth = async ()=>{
         try {
             const token = localStorage.getItem('token');
             if (!token) {
                 setIsLoading(false);
                 return;
+            }
+            if (isTokenExpired(token)) {
+                const newToken = await refreshToken();
+                if (!newToken) {
+                    await logout();
+                    return;
+                }
             }
             __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${token}`;
             try {
@@ -243,7 +263,11 @@ function useAuthentication() {
                                 originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
                                 return (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"])(originalRequest);
                             }
+                            // If no new token, handle logout
+                            await logout();
+                            return Promise.reject(error);
                         } catch (refreshError) {
+                            await logout();
                             return Promise.reject(refreshError);
                         }
                     }
@@ -257,28 +281,32 @@ function useAuthentication() {
             })["useAuthentication.useEffect"];
         }
     }["useAuthentication.useEffect"], []);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "useAuthentication.useEffect": ()=>{
-            checkAuth();
-        }
-    }["useAuthentication.useEffect"], []);
     const login = async ({ token, refreshToken, user })=>{
-        localStorage.setItem('token', token);
-        localStorage.setItem('refreshToken', refreshToken);
-        __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        if (user) {
-            const userData = {
-                id: user.id,
-                username: user.username,
-                iconName: user.iconName || 'UserCircle',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-            localStorage.setItem('userData', JSON.stringify(userData));
-            setUser(userData);
-            setIsAuthenticated(true);
-        } else {
-            await checkAuth();
+        if (!token || !refreshToken) {
+            console.error('Missing token or refresh token');
+            return;
+        }
+        try {
+            localStorage.setItem('token', token);
+            localStorage.setItem('refreshToken', refreshToken);
+            __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            if (user) {
+                const userData = {
+                    id: user.id,
+                    username: user.username,
+                    iconName: user.iconName || 'UserCircle',
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                localStorage.setItem('userData', JSON.stringify(userData));
+                setUser(userData);
+                setIsAuthenticated(true);
+            } else {
+                await checkAuth();
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            await logout();
         }
     };
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
@@ -291,13 +319,17 @@ function useAuthentication() {
         }
     }["useAuthentication.useEffect"], []);
     const logout = async ()=>{
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('userData');
-        delete __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'];
-        setUser(null);
-        setIsAuthenticated(false);
-        router.push('/auth/log-in');
+        try {
+            localStorage.removeItem('token');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('userData');
+            delete __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'];
+            setUser(null);
+            setIsAuthenticated(false);
+            router.push('/auth/log-in');
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     };
     const updateUser = (updatedUser)=>{
         setUser(updatedUser);
@@ -316,7 +348,7 @@ function useAuthentication() {
         updateUser
     };
 }
-_s(useAuthentication, "GHVN5rq+TJCIJBIG83mo1bmL77Y=", false, function() {
+_s(useAuthentication, "sKF+i+wBzwhL3X5SwimTG3qsUic=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
     ];
