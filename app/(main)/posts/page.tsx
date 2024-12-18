@@ -1,34 +1,40 @@
 'use client'
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { getPosts } from 'actions/get-posts'
 import { client } from 'lib/client'
 import { handleServerActionError } from 'lib/error-handling'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { Post } from 'types/types'
 
 const AllPosts = () => {
   const queryClient = useQueryClient()
+  const [localPosts, setLocalPosts] = useState<Post[]>([])
 
   const {
+    mutate: fetchPosts,
     data: posts,
-    isLoading,
+    isPending: isLoading,
     error,
-  } = useQuery({
-    queryKey: ['posts'],
-    queryFn: async () => {
+  } = useMutation({
+    mutationKey: ['posts'],
+    mutationFn: async () => {
       const result = await getPosts()
       const posts = handleServerActionError(result) as Post[]
-      return posts.map((post) => ({
+      const formattedPosts = posts.map((post) => ({
         ...post,
         upvotes: Number(post.upvotes) || 0,
         downvotes: Number(post.downvotes) || 0,
       }))
+      setLocalPosts(formattedPosts)
+      return formattedPosts
     },
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
-    staleTime: 1000 * 60,
   })
+
+  useEffect(() => {
+    fetchPosts()
+  }, [fetchPosts])
 
   const voteMutation = useMutation({
     mutationFn: async ({
@@ -50,23 +56,20 @@ const AllPosts = () => {
       }
     },
     onMutate: async ({ postId, voteType }) => {
-      await queryClient.cancelQueries({ queryKey: ['posts'] })
-      const previousPosts = queryClient.getQueryData(['posts']) as Post[]
+      if (!localPosts) return { previousPosts: null }
 
+      const previousPosts = [...localPosts]
       const updatedPosts = previousPosts.map((post) => {
         if (post._id === postId) {
           let { upvotes, downvotes, userVote } = post
           upvotes = Number(upvotes) || 0
           downvotes = Number(downvotes) || 0
 
-          // Update vote counts
           if (userVote === voteType) {
-            // Remove vote
             userVote = ''
             if (voteType === 'up') upvotes--
             else downvotes--
           } else {
-            // Add/change vote
             if (voteType === 'up') {
               upvotes++
               if (userVote === 'down') downvotes--
@@ -82,21 +85,21 @@ const AllPosts = () => {
         return post
       })
 
-      queryClient.setQueryData(['posts'], updatedPosts)
+      setLocalPosts(updatedPosts)
       return { previousPosts }
     },
     onError: (err, variables, context) => {
       if (context?.previousPosts) {
-        queryClient.setQueryData(['posts'], context.previousPosts)
+        setLocalPosts(context.previousPosts)
       }
     },
     onSuccess: (updatedPost, { postId }) => {
-      queryClient.setQueryData(['posts'], (old: Post[] | undefined) => {
-        if (!old) return old
-        return old.map((post) =>
-          post._id === postId ? { ...post, ...updatedPost } : post,
-        )
-      })
+      if (!localPosts) return
+
+      const updatedPosts = localPosts.map((post) =>
+        post._id === postId ? { ...post, ...updatedPost } : post,
+      )
+      setLocalPosts(updatedPosts)
     },
   })
 
@@ -119,7 +122,7 @@ const AllPosts = () => {
     )
   }
 
-  if (!posts || posts.length === 0) {
+  if (!localPosts || localPosts.length === 0) {
     return (
       <div className='flex items-center justify-center p-4'>
         <div className='text-lg'>No posts found</div>
@@ -127,7 +130,7 @@ const AllPosts = () => {
     )
   }
 
-  const sortedPosts = [...(posts || [])].sort((a, b) => {
+  const sortedPosts = [...localPosts].sort((a, b) => {
     const scoreA = (Number(a.upvotes) || 0) - (Number(a.downvotes) || 0)
     const scoreB = (Number(b.upvotes) || 0) - (Number(b.downvotes) || 0)
     if (scoreB !== scoreA) {
@@ -135,6 +138,7 @@ const AllPosts = () => {
     }
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   })
+
   return (
     <div className='mx-auto max-w-7xl p-4'>
       <h1 className='mb-8 text-center text-4xl font-bold text-blue-800'>

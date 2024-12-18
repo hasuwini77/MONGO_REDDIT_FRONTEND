@@ -21,10 +21,11 @@ interface Post {
 }
 
 export const getPosts = async (): Promise<ServerActionResponse<Post[]>> => {
+  // Revalidate before fetching
+  revalidateTag('posts')
+
   try {
     const response = await client.get('/posts')
-    revalidateTag('posts')
-
     return { data: response.data }
   } catch (error: any) {
     console.error(
