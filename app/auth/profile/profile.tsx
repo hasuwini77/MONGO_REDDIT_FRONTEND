@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 const MyProfile = () => {
-  const { isAuthenticated, isLoading, user, updateUser } = useAuthentication()
+  const { isAuthenticated, isLoading, user } = useAuthentication()
   const router = useRouter()
 
   useEffect(() => {
