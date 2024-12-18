@@ -9,11 +9,9 @@ import { createPost } from 'actions/create-post'
 import { FieldError } from 'components/field-error'
 import { toastServerError } from 'lib/error-handling'
 import { createPostSchema, CreatePostValues } from 'lib/schemas'
-import { useAuthentication } from 'hooks/useAuthentification'
 
 export const CreatePostForm = () => {
   const router = useRouter()
-  const { isAuthenticated } = useAuthentication()
 
   const {
     register,
