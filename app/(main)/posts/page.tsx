@@ -1,6 +1,6 @@
 'use client'
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { getPosts } from 'actions/get-posts'
 import { client } from 'lib/client'
 import { handleServerActionError } from 'lib/error-handling'
@@ -9,12 +9,10 @@ import { useEffect, useState } from 'react'
 import { Post } from 'types/types'
 
 const AllPosts = () => {
-  const queryClient = useQueryClient()
   const [localPosts, setLocalPosts] = useState<Post[]>([])
 
   const {
     mutate: fetchPosts,
-    data: posts,
     isPending: isLoading,
     error,
   } = useMutation({
