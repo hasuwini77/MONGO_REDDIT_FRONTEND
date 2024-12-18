@@ -18,11 +18,10 @@ export interface Post {
   }>
   createdAt: string
 }
-
 export interface User {
   id: string
   username: string
-  iconName: IconName
-  createdAt: Date
-  updatedAt: Date
+  iconName: string
+  createdAt: string
+  updatedAt: string
 }

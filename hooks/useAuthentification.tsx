@@ -59,6 +59,10 @@ export function useAuthentication() {
     }
   }, [user])
 
+  useEffect(() => {
+    checkAuth()
+  }, []) // Run on component mount
+
   const refreshToken = async () => {
     try {
       if (isRefreshingToken) {
@@ -169,13 +173,31 @@ export function useAuthentication() {
   const login = async ({ token, refreshToken, user }: LoginParams) => {
     localStorage.setItem('token', token)
     localStorage.setItem('refreshToken', refreshToken)
-    if (user) {
-      localStorage.setItem('userData', JSON.stringify(user))
-    }
-
     client.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    await checkAuth()
+
+    if (user) {
+      const userData: User = {
+        id: user.id,
+        username: user.username,
+        iconName: user.iconName || 'UserCircle',
+        createdAt: new Date().toISOString(), // Add these if they're not provided
+        updatedAt: new Date().toISOString(), // Add these if they're not provided
+      }
+      localStorage.setItem('userData', JSON.stringify(userData))
+      setUser(userData)
+      setIsAuthenticated(true)
+    } else {
+      await checkAuth()
+    }
   }
+
+  useEffect(() => {
+    // Set up default authorization header if token exists
+    const token = localStorage.getItem('token')
+    if (token) {
+      client.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    }
+  }, [])
 
   const logout = async () => {
     localStorage.removeItem('token')

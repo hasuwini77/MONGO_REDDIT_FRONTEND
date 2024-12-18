@@ -248,6 +248,10 @@ function useAuthentication() {
     }, [
         user
     ]);
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        checkAuth();
+    }, []) // Run on component mount
+    ;
     const refreshToken = async ()=>{
         try {
             if (isRefreshingToken) {
@@ -341,12 +345,29 @@ function useAuthentication() {
     const login = async ({ token, refreshToken, user })=>{
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
-        if (user) {
-            localStorage.setItem('userData', JSON.stringify(user));
-        }
         __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        await checkAuth();
+        if (user) {
+            const userData = {
+                id: user.id,
+                username: user.username,
+                iconName: user.iconName || 'UserCircle',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            localStorage.setItem('userData', JSON.stringify(userData));
+            setUser(userData);
+            setIsAuthenticated(true);
+        } else {
+            await checkAuth();
+        }
     };
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        // Set up default authorization header if token exists
+        const token = localStorage.getItem('token');
+        if (token) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["client"].defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        }
+    }, []);
     const logout = async ()=>{
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');

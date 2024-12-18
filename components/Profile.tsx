@@ -23,7 +23,14 @@ export const Profile = ({ user }: ProfileProps) => {
   useEffect(() => {
     if (user) {
       setUsername(user.username)
-      setSelectedIcon(user.iconName || 'UserCircle')
+      setSelectedIcon(
+        user.iconName as
+          | 'UserCircle'
+          | 'User'
+          | 'UserCog'
+          | 'UserCircle2'
+          | 'Ghost',
+      )
     }
   }, [user])
 

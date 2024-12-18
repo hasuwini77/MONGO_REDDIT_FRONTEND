@@ -1,6 +1,19 @@
 {
-  "app": {},
-  "appUsingSizeAdjust": false,
+  "app": {
+    "[project]/app/(main)/page": [
+      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
+    ],
+    "[project]/app/(main)/posts/[id]/page": [
+      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
+    ],
+    "[project]/app/(main)/create-post/page": [
+      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
+    ],
+    "[project]/app/auth/log-in/page": [
+      "static/media/i7dOIFdwYjGaAMFtZd_QA1ZbYFeQGQyU-s.p.2fca4ecb.woff2"
+    ]
+  },
+  "appUsingSizeAdjust": true,
   "pages": {},
   "pagesUsingSizeAdjust": false
 }
