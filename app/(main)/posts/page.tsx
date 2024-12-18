@@ -3,6 +3,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { getPosts } from 'actions/get-posts'
 import { client } from 'lib/client'
+import HashLoader from 'react-spinners/HashLoader'
 import { handleServerActionError } from 'lib/error-handling'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -103,8 +104,8 @@ const AllPosts = () => {
 
   if (isLoading) {
     return (
-      <div className='flex items-center justify-center p-4'>
-        <div className='text-lg'>Loading posts...</div>
+      <div className='flex h-screen items-center justify-center'>
+        <HashLoader size={50} color='#3B82F6' />
       </div>
     )
   }
