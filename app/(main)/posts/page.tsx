@@ -19,13 +19,15 @@ const AllPosts = () => {
     queryFn: async () => {
       const result = await getPosts()
       const posts = handleServerActionError(result) as Post[]
-      // Ensure vote counts are numbers
       return posts.map((post) => ({
         ...post,
         upvotes: Number(post.upvotes) || 0,
         downvotes: Number(post.downvotes) || 0,
       }))
     },
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    staleTime: 1000 * 60,
   })
 
   const voteMutation = useMutation({
