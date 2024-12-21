@@ -11,6 +11,7 @@ import { Post } from 'types/types'
 import { useAuthentication } from 'hooks/useAuthentification'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import { AxiosError } from 'axios'
 
 const AllPosts = () => {
   const [localPosts, setLocalPosts] = useState<Post[]>([])
@@ -62,11 +63,12 @@ const AllPosts = () => {
           upvotes: Number(data.upvotes) || 0,
           downvotes: Number(data.downvotes) || 0,
         }
-      } catch (error: any) {
-        if (error.response?.status === 401) {
-          // Token expired or invalid
-          toast.error('Please log in to vote!')
-          router.push('/login')
+      } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+          if (error.response?.status === 401) {
+            toast.error('Please log in to vote!')
+            router.push('/login')
+          }
         }
         throw error
       }
