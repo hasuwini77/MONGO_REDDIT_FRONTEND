@@ -14,7 +14,7 @@ import { toast } from 'sonner'
 
 const AllPosts = () => {
   const [localPosts, setLocalPosts] = useState<Post[]>([])
-  const { isAuthenticated, user } = useAuthentication() // Add this hook
+  const { isAuthenticated } = useAuthentication()
   const router = useRouter()
 
   const {
