@@ -8,9 +8,14 @@ import { handleServerActionError } from 'lib/error-handling'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { Post } from 'types/types'
+import { useAuthentication } from 'hooks/useAuthentification'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 
 const AllPosts = () => {
   const [localPosts, setLocalPosts] = useState<Post[]>([])
+  const { isAuthenticated, user } = useAuthentication() // Add this hook
+  const router = useRouter()
 
   const {
     mutate: fetchPosts,
@@ -46,15 +51,24 @@ const AllPosts = () => {
       postId: string
       voteType: 'up' | 'down'
     }) => {
-      const voteTypeForBackend = voteType === 'up' ? 'upvote' : 'downvote'
-      const response = await client.post(`/posts/${postId}/vote`, {
-        voteType: voteTypeForBackend,
-      })
-      const data = response.data
-      return {
-        ...data,
-        upvotes: Number(data.upvotes) || 0,
-        downvotes: Number(data.downvotes) || 0,
+      try {
+        const voteTypeForBackend = voteType === 'up' ? 'upvote' : 'downvote'
+        const response = await client.post(`/posts/${postId}/vote`, {
+          voteType: voteTypeForBackend,
+        })
+        const data = response.data
+        return {
+          ...data,
+          upvotes: Number(data.upvotes) || 0,
+          downvotes: Number(data.downvotes) || 0,
+        }
+      } catch (error: any) {
+        if (error.response?.status === 401) {
+          // Token expired or invalid
+          toast.error('Please log in to vote!')
+          router.push('/login')
+        }
+        throw error
       }
     },
     onMutate: async ({ postId, voteType }) => {
@@ -104,6 +118,23 @@ const AllPosts = () => {
       setLocalPosts(updatedPosts)
     },
   })
+
+  const handleVote = (
+    e: React.MouseEvent,
+    postId: string,
+    voteType: 'up' | 'down',
+  ) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (!isAuthenticated) {
+      toast.error('Please log in to vote!')
+      router.push('/auth/log-in')
+      return
+    }
+
+    voteMutation.mutate({ postId, voteType })
+  }
 
   if (isLoading) {
     return (
@@ -184,11 +215,7 @@ const AllPosts = () => {
                 </div>
                 <div className='flex items-center gap-1'>
                   <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      voteMutation.mutate({ postId: post._id, voteType: 'up' })
-                    }}
+                    onClick={(e) => handleVote(e, post._id, 'up')}
                     className={`flex items-center ${
                       post.userVote === 'up'
                         ? 'text-orange-500'
@@ -210,14 +237,7 @@ const AllPosts = () => {
                     </svg>
                   </button>
                   <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      voteMutation.mutate({
-                        postId: post._id,
-                        voteType: 'down',
-                      })
-                    }}
+                    onClick={(e) => handleVote(e, post._id, 'down')}
                     className={`flex items-center ${
                       post.userVote === 'down'
                         ? 'text-blue-500'
