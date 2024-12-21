@@ -61,7 +61,7 @@ export const Profile = ({ user }: ProfileProps) => {
       // Add a delay before refreshing
       setTimeout(() => {
         router.refresh()
-        setMessage('Profile updated successfully! Refreshing...')
+        setMessage('Profile updated successfully!')
         setIsLoading(false)
       }, 700)
     }
